@@ -662,6 +662,17 @@ h4 { font-size: var(--fs-h4); }
 @media (max-width: 900px) { .industry-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 620px) { .industry-grid { grid-template-columns: repeat(2, 1fr); } }
 
+/* Statement, editorial split layout */
+.statement-split { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(1.5rem, 5vw, 4.5rem); align-items: start; }
+.statement-split .eyebrow { margin-bottom: 1.1rem; }
+.statement-split h2 { font-size: var(--fs-h2); letter-spacing: -0.02em; line-height: 1.08; text-wrap: balance; }
+.statement-split__body { padding-top: 0.5rem; }
+.statement-split__body .lead {
+  color: var(--text-2); max-width: 54ch;
+  border-inline-start: 2px solid var(--accent); padding-inline-start: clamp(1rem, 2vw, 1.6rem);
+}
+@media (max-width: 820px) { .statement-split { grid-template-columns: 1fr; gap: 1.3rem; } }
+
 /* --------------------------------------------------------------------------
    10. APPROACH (sticky flow)
    -------------------------------------------------------------------------- */
