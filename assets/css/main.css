@@ -866,11 +866,11 @@ textarea { resize: vertical; min-height: 130px; }
 .loader.is-done { opacity: 0; visibility: hidden; }
 .loader__brand { position: relative; display: grid; justify-items: center; gap: 1.35rem; padding: 1rem; }
 .loader__logo {
-  width: clamp(160px, 40vw, 240px); height: auto;
+  width: clamp(280px, 80vw, 480px); height: auto;
   opacity: 0; transform: translateY(10px) scale(0.97);
   animation: loaderLogoIn 0.9s var(--ease-out) 0.15s forwards;
 }
-.loader__pulse { width: clamp(160px, 40vw, 240px); height: 30px; overflow: visible; }
+.loader__pulse { width: clamp(280px, 80vw, 480px); height: 34px; overflow: visible; }
 .loader__pulse-track { stroke: rgba(147, 178, 205, 0.14); stroke-width: 2; fill: none; }
 .loader__pulse-line {
   stroke: url(#loaderGrad); stroke-width: 2.6; fill: none; stroke-linecap: round; stroke-linejoin: round;
