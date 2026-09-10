@@ -404,7 +404,7 @@ h4 { font-size: var(--fs-h4); }
 [dir="rtl"] .hero__title { line-height: 1.18; letter-spacing: 0; }
 
 /* Word reveal */
-.wr { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.wr { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: 0.24em; margin-bottom: -0.24em; }
 .wr > span { display: inline-block; transform: translateY(115%); transition: transform 0.9s var(--ease-out); }
 .is-loaded .wr > span { transform: translateY(0); }
 
@@ -640,6 +640,33 @@ h4 { font-size: var(--fs-h4); }
 .flow-step p { color: var(--text-2); font-size: 0.96rem; }
 .flow-step .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.9rem; }
 
+/* Process (How we work) — modern stepper grid */
+.process__head { max-width: 760px; margin: 0 auto clamp(2.4rem, 5vw, 3.6rem); }
+.process__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1rem, 2vw, 1.5rem); }
+.process-step {
+  position: relative; padding: clamp(1.6rem, 2.6vw, 2.3rem); border-radius: var(--r-lg);
+  border: 1px solid var(--line); background: linear-gradient(165deg, var(--surface), var(--bg-2));
+  overflow: hidden; transition: transform 0.5s var(--ease-out), border-color 0.4s, box-shadow 0.5s;
+}
+.process-step::after {
+  content: ""; position: absolute; inset-inline: 0; top: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transform: scaleX(0); transform-origin: inline-start; transition: transform 0.55s var(--ease-out);
+}
+.process-step:hover { transform: translateY(-6px); border-color: rgba(0, 207, 255, 0.4); box-shadow: var(--shadow-card); }
+.process-step:hover::after { transform: scaleX(1); }
+.process-step__num {
+  font-family: var(--font-display); font-weight: 800; line-height: 1;
+  font-size: clamp(2.4rem, 4.5vw, 3.4rem); letter-spacing: -0.03em;
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  display: block; margin-bottom: 0.9rem;
+}
+.process-step h3 { font-size: 1.12rem; margin-bottom: 0.5rem; letter-spacing: -0.01em; }
+.process-step p { color: var(--text-2); font-size: 0.94rem; }
+@media (max-width: 900px) { .process__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .process__grid { grid-template-columns: 1fr; } }
+
 /* --------------------------------------------------------------------------
    11. TABS / FILTERS
    -------------------------------------------------------------------------- */
@@ -782,17 +809,28 @@ textarea { resize: vertical; min-height: 130px; }
   background: #0A1522; transition: opacity 0.6s var(--ease-out), visibility 0.6s;
 }
 .loader.is-done { opacity: 0; visibility: hidden; }
-.loader__mark { position: relative; width: 84px; height: 84px; }
-.loader__mark svg { width: 100%; height: 100%; }
-.loader__mark .ring {
-  fill: none; stroke: #00CFFF; stroke-width: 7; stroke-linecap: round;
-  stroke-dasharray: 264; stroke-dashoffset: 264;
-  transform: rotate(-90deg); transform-origin: center;
-  animation: ringdraw 1.4s var(--ease-inout) forwards;
+.loader__brand { position: relative; display: grid; justify-items: center; gap: 1.35rem; padding: 1rem; }
+.loader__logo {
+  width: clamp(160px, 40vw, 240px); height: auto;
+  opacity: 0; transform: translateY(10px) scale(0.97);
+  animation: loaderLogoIn 0.9s var(--ease-out) 0.15s forwards;
 }
-.loader__mark .ring-bg { fill: none; stroke: rgba(147, 178, 205, 0.15); stroke-width: 7; }
-@keyframes ringdraw { to { stroke-dashoffset: 0; } }
-.loader__pct { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-mono); font-size: 0.85rem; color: #A9BCCD; }
+.loader__pulse { width: clamp(160px, 40vw, 240px); height: 30px; overflow: visible; }
+.loader__pulse-track { stroke: rgba(147, 178, 205, 0.14); stroke-width: 2; fill: none; }
+.loader__pulse-line {
+  stroke: url(#loaderGrad); stroke-width: 2.6; fill: none; stroke-linecap: round; stroke-linejoin: round;
+  stroke-dasharray: 320; stroke-dashoffset: 320;
+  filter: drop-shadow(0 0 6px rgba(0, 207, 255, 0.55));
+  animation: loaderPulse 1.5s var(--ease-inout) infinite;
+}
+.loader__pct { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.18em; color: #A9BCCD; }
+.loader__pct i { font-style: normal; color: var(--accent); }
+@keyframes loaderLogoIn { to { opacity: 1; transform: none; } }
+@keyframes loaderPulse {
+  0% { stroke-dashoffset: 320; }
+  55% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -320; }
+}
 
 .cursor { display: none; }
 @media (hover: hover) and (pointer: fine) {

@@ -94,13 +94,11 @@
     init() {
       const nav = document.querySelector(".nav");
       if (!nav) return;
-      let lastY = window.scrollY;
       const onScroll = () => {
         const y = window.scrollY;
+        // Keep the nav pinned and visible while scrolling (glass style once past the top).
         nav.classList.toggle("is-scrolled", y > 24);
-        if (y > 420 && y > lastY + 6 && !document.body.classList.contains("drawer-open")) nav.classList.add("is-hidden");
-        else if (y < lastY - 4 || y < 120) nav.classList.remove("is-hidden");
-        lastY = y;
+        nav.classList.remove("is-hidden");
       };
       window.addEventListener("scroll", onScroll, { passive: true });
       onScroll();

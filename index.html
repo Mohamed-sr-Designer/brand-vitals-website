@@ -89,14 +89,21 @@
 <body class="noise">
   <a class="skip-link" href="#main" data-en="Skip to content" data-ar="تخطّي إلى المحتوى">Skip to content</a>
 
-  <!-- Loader -->
+  <!-- Loader: Brand Vitals logo + animated ECG pulse -->
   <div class="loader" aria-hidden="true">
-    <div class="loader__mark">
-      <svg viewBox="0 0 100 100">
-        <circle class="ring-bg" cx="50" cy="50" r="42"></circle>
-        <circle class="ring" cx="50" cy="50" r="42"></circle>
+    <div class="loader__brand">
+      <img class="loader__logo" src="assets/img/logo-light.svg" alt="Brand Vitals" width="240" height="54">
+      <svg class="loader__pulse" viewBox="0 0 240 30" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="loaderGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#00CFFF"/>
+            <stop offset="1" stop-color="#00E0C6"/>
+          </linearGradient>
+        </defs>
+        <path class="loader__pulse-track" d="M0 15 H146 l9 -11 l7 22 l8 -18 l6 7 H240"/>
+        <path class="loader__pulse-line" d="M0 15 H146 l9 -11 l7 22 l8 -18 l6 7 H240"/>
       </svg>
-      <div class="loader__pct"><span>0</span></div>
+      <div class="loader__pct"><span>0</span><i>%</i></div>
     </div>
   </div>
 
@@ -252,57 +259,42 @@
     <!-- ============ HOW WE WORK ============ -->
     <section class="section grid-field band-light" id="approach">
       <div class="container">
-        <div class="flow">
-          <div class="flow__sticky" data-reveal>
-            <p class="eyebrow" data-en="/ 03 · How we work" data-ar="/ 03 · كيف نعمل">/ 03 · How we work</p>
-            <h2 data-en="We don't start with channels. We start with the business." data-ar="لا نبدأ بالقنوات. نبدأ بالعمل نفسه.">We don't start with channels. We start with the business.</h2>
-            <p class="lead" data-en="Six disciplined stages that turn business understanding into compounding, measurable growth." data-ar="ست مراحل منضبطة تحوّل فهم العمل إلى نموٍّ متراكم وقابل للقياس.">Six disciplined stages that turn business understanding into compounding, measurable growth.</p>
-            <div><a class="btn btn--ghost" href="solutions.html" data-magnetic><span data-en="Explore our services" data-ar="استكشف خدماتنا">Explore our services</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
-          </div>
-          <div class="flow__steps">
-            <article class="flow-step" data-reveal>
-              <span class="flow-step__num">01</span>
-              <div>
-                <h3 data-en="Diagnose · Understand" data-ar="التشخيص · الفهم">Diagnose · Understand</h3>
-                <p data-en="Business, market, audience, offer, funnel, and current performance." data-ar="العمل، والسوق، والجمهور، والعرض، والقمع، والأداء الحالي.">Business, market, audience, offer, funnel, and current performance.</p>
-              </div>
-            </article>
-            <article class="flow-step" data-reveal style="--rd:.06s">
-              <span class="flow-step__num">02</span>
-              <div>
-                <h3 data-en="Strategize · Prioritize" data-ar="الاستراتيجية · الأولويات">Strategize · Prioritize</h3>
-                <p data-en="Identify the highest-impact opportunities and build the growth roadmap." data-ar="نحدّد الفرص الأعلى تأثيرًا ونبني خارطة طريق النمو.">Identify the highest-impact opportunities and build the growth roadmap.</p>
-              </div>
-            </article>
-            <article class="flow-step" data-reveal style="--rd:.12s">
-              <span class="flow-step__num">03</span>
-              <div>
-                <h3 data-en="Build · Create" data-ar="البناء · الإنشاء">Build · Create</h3>
-                <p data-en="Build the brand, creative, digital experience, and measurement infrastructure." data-ar="نبني العلامة والإبداع والتجربة الرقمية وبنية القياس.">Build the brand, creative, digital experience, and measurement infrastructure.</p>
-              </div>
-            </article>
-            <article class="flow-step" data-reveal style="--rd:.18s">
-              <span class="flow-step__num">04</span>
-              <div>
-                <h3 data-en="Launch · Execute" data-ar="الإطلاق · التنفيذ">Launch · Execute</h3>
-                <p data-en="Put the strategy into market across the channels that fit the objective." data-ar="نطرح الاستراتيجية في السوق عبر القنوات المناسبة للهدف.">Put the strategy into market across the channels that fit the objective.</p>
-              </div>
-            </article>
-            <article class="flow-step" data-reveal style="--rd:.24s">
-              <span class="flow-step__num">05</span>
-              <div>
-                <h3 data-en="Optimize · Learn" data-ar="التحسين · التعلّم">Optimize · Learn</h3>
-                <p data-en="Test, measure, learn, and reallocate around what actually moves the business." data-ar="نختبر ونقيس ونتعلّم ونعيد توزيع الموارد حول ما يُحرّك العمل فعلًا.">Test, measure, learn, and reallocate around what actually moves the business.</p>
-              </div>
-            </article>
-            <article class="flow-step" data-reveal style="--rd:.3s">
-              <span class="flow-step__num">06</span>
-              <div>
-                <h3 data-en="Scale · Compound" data-ar="التوسّع · المضاعفة">Scale · Compound</h3>
-                <p data-en="Double down on proven opportunities while controlling cost and efficiency." data-ar="نضاعف الرهان على الفرص المثبتة مع ضبط التكلفة والكفاءة.">Double down on proven opportunities while controlling cost and efficiency.</p>
-              </div>
-            </article>
-          </div>
+        <div class="process__head section-head" data-reveal>
+          <p class="eyebrow" data-en="/ 03 · How we work" data-ar="/ 03 · كيف نعمل">/ 03 · How we work</p>
+          <h2 data-en="We don't start with channels. We start with the business." data-ar="لا نبدأ بالقنوات. نبدأ بالعمل نفسه.">We don't start with channels. We start with the business.</h2>
+          <p class="lead" data-en="Six disciplined stages that turn business understanding into compounding, measurable growth." data-ar="ست مراحل منضبطة تحوّل فهم العمل إلى نموٍّ متراكم وقابل للقياس.">Six disciplined stages that turn business understanding into compounding, measurable growth.</p>
+        </div>
+        <div class="process__grid">
+          <article class="process-step" data-reveal>
+            <span class="process-step__num">01</span>
+            <h3 data-en="Diagnose · Understand" data-ar="التشخيص · الفهم">Diagnose · Understand</h3>
+            <p data-en="Business, market, audience, offer, funnel, and current performance." data-ar="العمل، والسوق، والجمهور، والعرض، والقمع، والأداء الحالي.">Business, market, audience, offer, funnel, and current performance.</p>
+          </article>
+          <article class="process-step" data-reveal style="--rd:.06s">
+            <span class="process-step__num">02</span>
+            <h3 data-en="Strategize · Prioritize" data-ar="الاستراتيجية · الأولويات">Strategize · Prioritize</h3>
+            <p data-en="Identify the highest-impact opportunities and build the growth roadmap." data-ar="نحدّد الفرص الأعلى تأثيرًا ونبني خارطة طريق النمو.">Identify the highest-impact opportunities and build the growth roadmap.</p>
+          </article>
+          <article class="process-step" data-reveal style="--rd:.12s">
+            <span class="process-step__num">03</span>
+            <h3 data-en="Build · Create" data-ar="البناء · الإنشاء">Build · Create</h3>
+            <p data-en="Build the brand, creative, digital experience, and measurement infrastructure." data-ar="نبني العلامة والإبداع والتجربة الرقمية وبنية القياس.">Build the brand, creative, digital experience, and measurement infrastructure.</p>
+          </article>
+          <article class="process-step" data-reveal style="--rd:.18s">
+            <span class="process-step__num">04</span>
+            <h3 data-en="Launch · Execute" data-ar="الإطلاق · التنفيذ">Launch · Execute</h3>
+            <p data-en="Put the strategy into market across the channels that fit the objective." data-ar="نطرح الاستراتيجية في السوق عبر القنوات المناسبة للهدف.">Put the strategy into market across the channels that fit the objective.</p>
+          </article>
+          <article class="process-step" data-reveal style="--rd:.24s">
+            <span class="process-step__num">05</span>
+            <h3 data-en="Optimize · Learn" data-ar="التحسين · التعلّم">Optimize · Learn</h3>
+            <p data-en="Test, measure, learn, and reallocate around what actually moves the business." data-ar="نختبر ونقيس ونتعلّم ونعيد توزيع الموارد حول ما يُحرّك العمل فعلًا.">Test, measure, learn, and reallocate around what actually moves the business.</p>
+          </article>
+          <article class="process-step" data-reveal style="--rd:.3s">
+            <span class="process-step__num">06</span>
+            <h3 data-en="Scale · Compound" data-ar="التوسّع · المضاعفة">Scale · Compound</h3>
+            <p data-en="Double down on proven opportunities while controlling cost and efficiency." data-ar="نضاعف الرهان على الفرص المثبتة مع ضبط التكلفة والكفاءة.">Double down on proven opportunities while controlling cost and efficiency.</p>
+          </article>
         </div>
       </div>
     </section>
@@ -463,32 +455,11 @@
       </div>
     </section>
 
-    <!-- ============ ABOUT / LOCATION ============ -->
-    <section class="section section--tight" aria-label="About Brand Vitals">
-      <div class="container">
-        <div class="section-head" data-reveal>
-          <p class="eyebrow" data-en="/ 09 · About Brand Vitals" data-ar="/ 09 · عن براند فايتلز">/ 09 · About Brand Vitals</p>
-          <h2 data-en="Built in Cairo. Working across MENA." data-ar="مبنيّون في القاهرة. نعمل عبر المنطقة.">Built in Cairo. Working across MENA.</h2>
-          <p class="lead" data-en="Brand Vitals is a full-service marketing agency based in Cairo, Egypt. We bring together strategy, creative, digital experience, and performance marketing to help ambitious businesses grow. Our approach is simple: understand the business first, build the right system, then measure what happens." data-ar="براند فايتلز وكالة تسويق متكاملة الخدمات مقرّها القاهرة، مصر. نجمع الاستراتيجية والإبداع والتجربة الرقمية وتسويق الأداء لمساعدة الأعمال الطموحة على النمو. منهجنا بسيط: نفهم العمل أولًا، نبني النظام الصحيح، ثم نقيس ما يحدث.">Brand Vitals is a full-service marketing agency based in Cairo, Egypt. We bring together strategy, creative, digital experience, and performance marketing to help ambitious businesses grow. Our approach is simple: understand the business first, build the right system, then measure what happens.</p>
-        </div>
-        <div class="map-shell" data-reveal>
-          <div class="dots" aria-hidden="true"></div>
-          <span class="beacon" style="top:46%; inset-inline-start:44%;" aria-hidden="true"><span class="ring2"></span><span class="tag" data-en="New Cairo, Egypt" data-ar="القاهرة الجديدة، مصر">New Cairo, Egypt</span></span>
-          <div class="map-card" style="bottom:1.4rem; inset-inline-start:1.4rem;">
-            <span class="mono" style="color:var(--accent)">GMT+2</span>
-            <strong data-en="New Cairo, Cairo, Egypt" data-ar="القاهرة الجديدة، القاهرة، مصر">New Cairo, Cairo, Egypt</strong>
-            <span data-en="Serving Egypt &amp; MENA · Sun to Thu, 10:00 to 18:00" data-ar="نخدم مصر والمنطقة · الأحد إلى الخميس، 10:00 إلى 18:00">Serving Egypt &amp; MENA · Sun to Thu, 10:00 to 18:00</span>
-            <span class="mono"><a href="tel:+201090861397" dir="ltr">+20 109 086 1397</a></span>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- ============ FINAL CTA ============ -->
     <section class="section cta-band section--flush-top">
       <div class="container">
         <div class="cta-band__card grid-field" data-reveal>
-          <p class="eyebrow eyebrow--bare" style="color:var(--accent)" data-en="/ 10 · Start a conversation" data-ar="/ 10 · ابدأ محادثة">/ 10 · Start a conversation</p>
+          <p class="eyebrow eyebrow--bare" style="color:var(--accent)" data-en="/ 09 · Start a conversation" data-ar="/ 09 · ابدأ محادثة">/ 09 · Start a conversation</p>
           <h2 data-en="Have a growth problem worth solving?" data-ar="عندك تحدّي نموٍّ يستحقّ الحل؟">Have a growth problem worth solving?</h2>
           <p class="lead" data-en="Tell us where you are, where you want to go, and what's getting in the way. We'll come back with a tailored growth plan within 24 hours." data-ar="أخبرنا أين أنت الآن، وإلى أين تريد الوصول، وما الذي يعيقك. سنعود إليك بخطة نموّ مخصّصة خلال 24 ساعة.">Tell us where you are, where you want to go, and what's getting in the way. We'll come back with a tailored growth plan within 24 hours.</p>
           <div class="btn-row" style="justify-content:center">
