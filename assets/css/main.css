@@ -618,6 +618,50 @@ h4 { font-size: var(--fs-h4); }
 .stat__num .unit { font-size: 0.45em; color: var(--accent); font-weight: 500; margin-inline-start: 0.1em; }
 .stat__label { color: var(--text-2); font-size: 0.95rem; max-width: 24ch; }
 
+/* Results showcase (Selected results) */
+.results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(1rem, 1.6vw, 1.4rem); }
+.result-card {
+  position: relative; display: grid; gap: 0.55rem; align-content: start;
+  padding: clamp(1.8rem, 2.6vw, 2.4rem) clamp(1.4rem, 2vw, 1.8rem);
+  border-radius: var(--r-lg); border: 1px solid var(--line);
+  background: linear-gradient(165deg, var(--surface), var(--bg-2)); overflow: hidden;
+  transition: transform 0.5s var(--ease-out), border-color 0.4s, box-shadow 0.5s;
+}
+.result-card::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 130px; pointer-events: none;
+  background: radial-gradient(120% 80% at 50% 0%, rgba(0, 207, 255, 0.16), transparent 70%);
+}
+.result-card:hover { transform: translateY(-6px); border-color: rgba(0, 207, 255, 0.4); box-shadow: var(--shadow-card); }
+.result-card__value {
+  position: relative; font-family: var(--font-display); font-weight: 800; line-height: 0.92;
+  font-size: clamp(2.8rem, 5.4vw, 4rem); letter-spacing: -0.04em;
+  background: linear-gradient(120deg, var(--accent), var(--accent-2));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.result-card__value span { font-size: 0.5em; font-weight: 700; }
+.result-card__type { position: relative; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+.result-card__client { position: relative; color: var(--text-2); font-size: 0.88rem; border-top: 1px solid var(--line); padding-top: 0.7rem; margin-top: 0.25rem; }
+@media (max-width: 900px) { .results-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .results-grid { grid-template-columns: 1fr; } }
+
+/* Industry cards (Who we work with) */
+.industry-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(0.9rem, 1.6vw, 1.3rem); }
+.industry-card {
+  display: grid; gap: 0.9rem; padding: clamp(1.4rem, 2.2vw, 1.8rem);
+  border-radius: var(--r-lg); border: 1px solid var(--line);
+  background: linear-gradient(165deg, var(--surface), var(--bg-2));
+  transition: transform 0.5s var(--ease-out), border-color 0.4s, box-shadow 0.5s;
+}
+.industry-card:hover { transform: translateY(-5px); border-color: rgba(0, 207, 255, 0.4); box-shadow: var(--shadow-card); }
+.industry-card__icon {
+  width: 46px; height: 46px; border-radius: var(--r-md); display: grid; place-items: center;
+  background: rgba(0, 207, 255, 0.1); border: 1px solid rgba(0, 207, 255, 0.25); color: var(--accent);
+}
+.industry-card__icon svg { width: 23px; height: 23px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.industry-card h3 { font-size: 1rem; letter-spacing: -0.01em; }
+@media (max-width: 900px) { .industry-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 620px) { .industry-grid { grid-template-columns: repeat(2, 1fr); } }
+
 /* --------------------------------------------------------------------------
    10. APPROACH (sticky flow)
    -------------------------------------------------------------------------- */
