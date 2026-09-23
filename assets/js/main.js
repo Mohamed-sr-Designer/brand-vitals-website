@@ -14,9 +14,8 @@
   ------------------------------------------------------------------ */
   const Theme = {
     init() {
-      const saved = localStorage.getItem("oso-theme");
-      const preferLight = window.matchMedia("(prefers-color-scheme: light)").matches;
-      this.set(saved || (preferLight ? "light" : "dark"), false);
+      // Dark is the brand theme; light is opt-in via the toggle.
+      this.set(localStorage.getItem("oso-theme") || "dark", false);
       document.querySelectorAll("[data-theme-toggle]").forEach(btn =>
         btn.addEventListener("click", () => this.set(doc.dataset.theme === "dark" ? "light" : "dark", true))
       );
@@ -25,7 +24,7 @@
       doc.dataset.theme = mode;
       if (persist) localStorage.setItem("oso-theme", mode);
       const meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.content = mode === "dark" ? "#0A1522" : "#F7F8FA";
+      if (meta) meta.content = mode === "dark" ? "#05080B" : "#F5F7F9";
     }
   };
 
@@ -208,38 +207,13 @@
   };
 
   /* ------------------------------------------------------------------
-     CURSOR — dot + trailing ring (fine pointers only)
-  ------------------------------------------------------------------ */
-  const Cursor = {
-    init() {
-      if (!finePointer || reduceMotion) return;
-      const dot = document.querySelector(".cursor");
-      const ring = document.querySelector(".cursor-ring");
-      if (!dot || !ring) return;
-      let mx = -100, my = -100, rx = -100, ry = -100;
-      window.addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; }, { passive: true });
-      const loop = () => {
-        rx += (mx - rx) * 0.16;
-        ry += (my - ry) * 0.16;
-        dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
-        ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
-        requestAnimationFrame(loop);
-      };
-      loop();
-      const hoverables = "a, button, .card, [data-tilt], input, select, textarea, .tab";
-      document.addEventListener("mouseover", e => { if (e.target.closest(hoverables)) ring.classList.add("is-hover"); });
-      document.addEventListener("mouseout", e => { if (e.target.closest(hoverables)) ring.classList.remove("is-hover"); });
-    }
-  };
-
-  /* ------------------------------------------------------------------
      MAGNETIC BUTTONS
   ------------------------------------------------------------------ */
   const Magnetic = {
     init() {
       if (!finePointer || reduceMotion) return;
       document.querySelectorAll("[data-magnetic]").forEach(el => {
-        const strength = 0.35;
+        const strength = 0.18;
         el.addEventListener("mousemove", e => {
           const r = el.getBoundingClientRect();
           const x = (e.clientX - r.left - r.width / 2) * strength;
@@ -275,22 +249,17 @@
   };
 
   /* ------------------------------------------------------------------
-     TILT — 3D card tilt + spotlight coordinates
+     SPOTLIGHT — cursor-following glow on [data-tilt] cards (no 3D tilt)
   ------------------------------------------------------------------ */
   const Tilt = {
     init() {
       if (!finePointer || reduceMotion) return;
       document.querySelectorAll("[data-tilt]").forEach(card => {
-        const max = 7;
         card.addEventListener("mousemove", e => {
           const r = card.getBoundingClientRect();
-          const px = (e.clientX - r.left) / r.width;
-          const py = (e.clientY - r.top) / r.height;
-          card.style.setProperty("--mx", `${px * 100}%`);
-          card.style.setProperty("--my", `${py * 100}%`);
-          card.style.transform = `perspective(900px) rotateX(${(0.5 - py) * max}deg) rotateY(${(px - 0.5) * max}deg) translateY(-4px)`;
+          card.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+          card.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
         });
-        card.addEventListener("mouseleave", () => { card.style.transform = ""; });
       });
     }
   };
@@ -536,7 +505,6 @@
     Reveal.init();
     Counters.init();
     Signals.init();
-    Cursor.init();
     Magnetic.init();
     Ripple.init();
     Tilt.init();
