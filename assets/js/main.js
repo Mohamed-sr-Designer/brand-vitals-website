@@ -24,7 +24,7 @@
       doc.dataset.theme = mode;
       if (persist) localStorage.setItem("oso-theme", mode);
       const meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.content = mode === "dark" ? "#05080B" : "#F5F7F9";
+      if (meta) meta.content = getComputedStyle(doc).getPropertyValue("--bg").trim() || (mode === "dark" ? "#05080B" : "#F5F7F9");
     }
   };
 
