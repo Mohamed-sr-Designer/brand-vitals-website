@@ -876,9 +876,19 @@ body.modal-open { overflow: hidden; }
 .footer__col a:hover { color: var(--text); }
 .footer address { font-size: 0.92rem; line-height: 1.95; color: var(--text-2); }
 .footer__bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 1.5rem 2rem; border-top: 1px solid var(--line); font-size: 0.82rem; color: var(--text-3); }
-.legal { display: flex; gap: 1.5rem; }
+.legal { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; }
 .legal a { transition: color 0.25s; }
 .legal a:hover { color: var(--text); }
+/* Keep the bottom row clear of the floating back-to-top button */
+.footer__bar { padding-inline-end: 4.5rem; }
+.footer__dash {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.4rem 0.85rem; border-radius: var(--r-pill);
+  border: 1px solid var(--line-strong); color: var(--text-2); font-weight: 500;
+  transition: color 0.25s, border-color 0.25s, background-color 0.25s;
+}
+.footer__dash svg { width: 13px; height: 13px; }
+.legal .footer__dash:hover { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); background: var(--accent-soft); }
 
 /* --------------------------------------------------------------------------
    16. RESPONSIVE
