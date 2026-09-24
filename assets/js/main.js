@@ -355,13 +355,27 @@
           });
           if (!valid) return;
           const btn = form.querySelector('button[type="submit"]');
-          if (btn) btn.classList.add("is-loading");
-          setTimeout(() => {
+          const data = Forms.collect(form);
+          const done = () => {
             if (btn) btn.classList.remove("is-loading");
             form.style.display = "none";
             const ok = document.querySelector(form.dataset.success || ".form-success");
             if (ok) { ok.classList.add("is-visible"); ok.scrollIntoView({ behavior: "smooth", block: "center" }); }
-          }, 1100);
+          };
+          Forms.setError(form, "");
+          // Bots fill the hidden honeypot field; the dashboard preview never sends anything.
+          if (data.website || window.__BV_PREVIEW) { done(); return; }
+          if (!Track.configured()) {
+            // No database connected yet: hand the request to WhatsApp so it is never lost.
+            if (Forms.toWhatsApp(data)) done();
+            else Forms.setError(form, "wa");
+            return;
+          }
+          if (btn) btn.classList.add("is-loading");
+          Track.lead(data).then(done).catch(() => {
+            if (btn) btn.classList.remove("is-loading");
+            Forms.setError(form, "net");
+          });
         });
         form.querySelectorAll("input, select, textarea").forEach(input => {
           input.addEventListener("input", () => {
@@ -370,6 +384,138 @@
           });
         });
       });
+    },
+    // Select values are stored with their English label so the dashboard reads them the same way.
+    label(form, name) {
+      const sel = form.querySelector('select[name="' + name + '"]');
+      if (!sel || !sel.value) return "";
+      const opt = sel.options[sel.selectedIndex];
+      return (opt.getAttribute("data-en") || opt.textContent || sel.value).trim();
+    },
+    collect(form) {
+      const fd = new FormData(form);
+      const get = k => String(fd.get(k) || "").trim();
+      return {
+        name: get("name"), email: get("email"), phone: get("phone"), company: get("company"),
+        service: Forms.label(form, "interest"), budget: Forms.label(form, "budget"), message: get("message"),
+        website: get("website"), form: form.closest("#consultModal") ? "consult" : "contact"
+      };
+    },
+    waNumber() {
+      const a = document.querySelector('a[href*="wa.me/"]');
+      const m = a && a.getAttribute("href").match(/wa\.me\/(\d+)/);
+      return m ? m[1] : "201090861397";
+    },
+    toWhatsApp(d) {
+      const ar = I18n.lang === "ar";
+      const rows = [
+        ar ? "طلب جديد من الموقع" : "New inquiry from the website",
+        (ar ? "الاسم: " : "Name: ") + d.name,
+        d.company && (ar ? "الشركة: " : "Company: ") + d.company,
+        d.email && (ar ? "البريد: " : "Email: ") + d.email,
+        d.phone && (ar ? "الهاتف: " : "Phone: ") + d.phone,
+        d.service && (ar ? "الخدمة: " : "Service: ") + d.service,
+        d.budget && (ar ? "الميزانية: " : "Budget: ") + d.budget,
+        d.message && (ar ? "الرسالة: " : "Message: ") + d.message
+      ].filter(Boolean);
+      const w = window.open("https://wa.me/" + Forms.waNumber() + "?text=" + encodeURIComponent(rows.join("\n")), "_blank");
+      if (!w) return false;
+      try { w.opener = null; } catch (e) { /* ignore */ }
+      return true;
+    },
+    setError(form, kind) {
+      let el = form.querySelector(".form-error");
+      if (!kind) { if (el) el.remove(); return; }
+      if (!el) {
+        el = document.createElement("p");
+        el.className = "form-error";
+        el.setAttribute("role", "alert");
+        const btn = form.querySelector('button[type="submit"]');
+        (btn ? btn.parentNode : form).appendChild(el);
+      }
+      const ar = I18n.lang === "ar";
+      el.textContent = kind === "wa"
+        ? (ar ? "افتح واتساب للمتابعة، أو راسلنا مباشرة: " : "Please allow the WhatsApp window, or message us directly: ")
+        : (ar ? "تعذّر الإرسال الآن. راسلنا على واتساب: " : "We couldn't send that right now. Message us on WhatsApp: ");
+      const a = document.createElement("a");
+      a.href = "https://wa.me/" + Forms.waNumber();
+      a.target = "_blank"; a.rel = "noopener";
+      a.textContent = "WhatsApp";
+      el.appendChild(a);
+    }
+  };
+
+  /* ------------------------------------------------------------------
+     TRACK — privacy-friendly visit counter + lead storage (Supabase).
+     Configured from the dashboard; does nothing until a URL and key exist.
+     No cookies: an anonymous random ID in localStorage counts unique visitors.
+  ------------------------------------------------------------------ */
+  /* @cms-backend-start */
+  const BACKEND = {"url":"","key":""};
+  /* @cms-backend-end */
+  const Track = {
+    configured() { return !!(BACKEND.url && BACKEND.key) && !window.__BV_PREVIEW; },
+    trackable() {
+      if (!this.configured()) return false;
+      if (!/^https?:$/.test(location.protocol) || /^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])$/.test(location.hostname)) return false;
+      if (navigator.webdriver || navigator.doNotTrack === "1" || window.doNotTrack === "1") return false;
+      try { if (localStorage.getItem("bv-no-track") === "1") return false; } catch (e) { /* ignore */ }
+      return true;
+    },
+    send(table, row) {
+      const headers = { apikey: BACKEND.key, "Content-Type": "application/json", Prefer: "return=minimal" };
+      if (/^eyJ/.test(BACKEND.key)) headers.Authorization = "Bearer " + BACKEND.key;
+      return fetch(BACKEND.url.replace(/\/+$/, "") + "/rest/v1/" + table, {
+        method: "POST", headers, body: JSON.stringify(row), keepalive: true, credentials: "omit"
+      }).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); });
+    },
+    uid() { return window.crypto && crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2); },
+    visitor() {
+      try {
+        let id = localStorage.getItem("bv-vid"), fresh = false;
+        if (!id) { id = this.uid(); localStorage.setItem("bv-vid", id); fresh = true; }
+        return { id, fresh };
+      } catch (e) { return { id: "", fresh: false }; }
+    },
+    session() {
+      try { let s = sessionStorage.getItem("bv-sid"); if (!s) { s = this.uid(); sessionStorage.setItem("bv-sid", s); } return s; }
+      catch (e) { return ""; }
+    },
+    // First touch of the visit: external referrer host and UTM tags.
+    source() {
+      try { const saved = sessionStorage.getItem("bv-src"); if (saved) return JSON.parse(saved); } catch (e) { /* ignore */ }
+      const q = new URLSearchParams(location.search);
+      let ref = "";
+      try { if (document.referrer) { const u = new URL(document.referrer); if (u.host !== location.host) ref = u.host.replace(/^www\./, ""); } } catch (e) { /* ignore */ }
+      const cut = (v, n) => String(v || "").slice(0, n);
+      const src = { referrer: cut(ref, 300), utm_source: cut(q.get("utm_source"), 120), utm_medium: cut(q.get("utm_medium"), 120), utm_campaign: cut(q.get("utm_campaign"), 160) };
+      try { sessionStorage.setItem("bv-src", JSON.stringify(src)); } catch (e) { /* ignore */ }
+      return src;
+    },
+    page() {
+      let p = "";
+      try { p = decodeURIComponent(location.pathname.split("/").pop() || ""); } catch (e) { /* ignore */ }
+      p = p || "index.html";
+      if (!/\.html?$/i.test(p)) p += ".html";
+      return p.slice(0, 300);
+    },
+    pageview() {
+      if (!this.trackable()) return;
+      const v = this.visitor(), w = window.innerWidth;
+      let tz = "";
+      try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch (e) { /* ignore */ }
+      this.send("bv_pageviews", Object.assign({
+        path: this.page(), title: document.title.slice(0, 300), visitor: v.id, session: this.session(), is_new: v.fresh,
+        lang: doc.lang || "en", device: w < 768 ? "mobile" : w < 1100 ? "tablet" : "desktop", tz: tz.slice(0, 64)
+      }, this.source())).catch(() => { /* never block the page */ });
+    },
+    lead(d) {
+      const cut = (v, n) => String(v || "").slice(0, n);
+      return this.send("bv_leads", Object.assign({
+        name: cut(d.name, 200), email: cut(d.email, 200), phone: cut(d.phone, 60), company: cut(d.company, 200),
+        service: cut(d.service, 120), budget: cut(d.budget, 120), message: cut(d.message, 5000), form: d.form,
+        page: this.page(), lang: doc.lang || "en", visitor: this.visitor().id
+      }, this.source()));
     }
   };
 
@@ -394,6 +540,7 @@
           <h3 style="margin-top:.6rem" data-en="Book your 30 minutes." data-ar="احجز الـ30 دقيقة الخاصة بك.">Book your 30 minutes.</h3>
           <p class="sub" data-en="A strategist, not a salesperson, will call you within one business day." data-ar="خبير استراتيجي، لا مندوب مبيعات، سيتصل بك خلال يوم عمل واحد.">A strategist, not a salesperson, will call you within one business day.</p>
           <form data-validate data-success="#modalSuccess" novalidate>
+            <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
             <div class="form-grid">
               <div class="field">
                 <label data-en="Full name *" data-ar="الاسم الكامل *">Full name *</label>
@@ -513,6 +660,7 @@
     Filter.init();
     Forms.init();
     Misc.init();
+    Track.pageview();
   };
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);

@@ -33,7 +33,8 @@
   const DEFAULT_REPO = { owner: "Mohamed-sr-Designer", repo: "brand-vitals-website", branch: "main" };
   const LS = {
     token: "bv-cms-token", repo: "bv-cms-repo", lang: "bv-cms-lang", draft: "bv-cms-draft-v1",
-    session: "bv-cms-session", remember: "bv-cms-remember", preview: "bv-cms-preview"
+    session: "bv-cms-session", remember: "bv-cms-remember", preview: "bv-cms-preview",
+    sbCfg: "bv-cms-sb", sbAuth: "bv-cms-sb-auth", sbEmail: "bv-cms-sb-email", noTrack: "bv-no-track"
   };
   const SHARED = [
     { sel: "header.nav", ar: "القائمة العلوية", en: "Top navigation" },
@@ -414,7 +415,122 @@
     k_img: ["ملف", "File"],
     yes: ["أيوه", "Yes"],
     confirmTitle: ["تأكيد", "Confirm"],
-    openFile: ["افتح", "Open"]
+    openFile: ["افتح", "Open"],
+    tabOverview: ["نظرة عامة", "Overview"],
+    tabLeads: ["العملاء", "Leads"],
+    overviewIntro: ["زوار الموقع والعملاء المحتملين في مكان واحد.", "Website visitors and leads in one place."],
+    leadsIntro: ["كل الطلبات اللي جت من فورم التواصل ونافذة الاستشارة.", "Every request from the contact form and the consultation popup."],
+    lastDays: ["آخر {n} يوم", "Last {n} days"],
+    refreshData: ["تحديث", "Refresh"],
+    liveNow: ["{n} على الموقع دلوقتي", "{n} on the site now"],
+    kVisitors: ["الزوار", "Visitors"],
+    kViews: ["مشاهدات الصفحات", "Page views"],
+    kLeads: ["عملاء محتملين", "Leads"],
+    kConv: ["معدل التحويل", "Conversion rate"],
+    kBounce: ["معدل الخروج السريع", "Bounce rate"],
+    kPPV: ["صفحات لكل زيارة", "Pages per visit"],
+    vsPrev: ["عن الفترة اللي قبلها", "vs previous period"],
+    newPeriod: ["جديد", "New"],
+    chartOf: ["{m} يوم بيوم", "Daily {m}"],
+    showTable: ["عرض الأرقام كجدول", "Show as table"],
+    hideTable: ["إخفاء الجدول", "Hide table"],
+    colDay: ["اليوم", "Day"],
+    topPages: ["أكتر الصفحات زيارة", "Top pages"],
+    sources: ["الناس جاية منين", "Traffic sources"],
+    devices: ["الأجهزة", "Devices"],
+    languages: ["لغة التصفح", "Browsing language"],
+    regions: ["الدول (تقريبي)", "Countries (approx.)"],
+    regionsNote: ["محسوبة من توقيت الجهاز، من غير أي تتبع للموقع الجغرافي.", "Estimated from the device time zone, no location tracking."],
+    latestLeads: ["أحدث العملاء", "Latest leads"],
+    leadsByService: ["العملاء حسب الخدمة", "Leads by service"],
+    viewAll: ["عرض الكل", "View all"],
+    direct: ["دخول مباشر", "Direct"],
+    unknown: ["غير معروف", "Unknown"],
+    other: ["أخرى", "Other"],
+    dMobile: ["موبايل", "Mobile"],
+    dDesktop: ["كمبيوتر", "Desktop"],
+    dTablet: ["تابلت", "Tablet"],
+    noData: ["لسه مفيش بيانات في الفترة دي.", "No data for this period yet."],
+    justNow: ["دلوقتي", "just now"],
+    loadingData: ["بيحمّل البيانات…", "Loading data…"],
+    setupTitle: ["اربط قاعدة البيانات عشان تشوف الزوار والعملاء", "Connect the database to see visitors and leads"],
+    setupBody: ["الموقع على GitHub Pages ومالوش سيرفر، فالزيارات والطلبات محتاجة مكان تتسجل فيه. هنستخدم Supabase المجاني. الإعداد مرة واحدة بس وبياخد حوالي 10 دقايق.", "The site runs on GitHub Pages with no server, so visits and requests need somewhere to be stored. We use Supabase's free plan. Setup is one time and takes about 10 minutes."],
+    setupStart: ["ابدأ الإعداد", "Start setup"],
+    demoShow: ["شوف الشكل ببيانات تجريبية", "Preview with sample data"],
+    demoBanner: ["دي بيانات تجريبية للعرض بس، مش زوار أو عملاء حقيقيين.", "Sample data for preview only, not real visitors or leads."],
+    demoStop: ["اقفل العرض التجريبي", "Exit sample mode"],
+    sbTitle: ["قاعدة البيانات (الزوار والعملاء)", "Database (visitors and leads)"],
+    sbSteps: [
+      "افتح Supabase من الزرار اللي تحت، اعمل حساب مجاني، ودوس New project.|من زرار Connect أو من Project Settings ثم API Keys، انسخ Project URL والمفتاح العام (publishable أو anon) وحطهم تحت ودوس «حفظ الربط».|من Authentication ثم Users دوس Add user، واعمل يوزر بإيميلك وباسورد، وفعّل Auto Confirm User.|اكتب نفس الإيميل في خانة «إيميل الأدمن»، ودوس «نسخ كود الإعداد»، وافتح SQL Editor في Supabase والصق الكود ودوس Run.|سجّل دخول هنا بنفس الإيميل والباسورد، وبعدين انشر الموقع من زرار «نشر» عشان يبدأ يسجّل الزيارات والعملاء.",
+      "Open Supabase with the button below, create a free account, and click New project.|From Connect or Project Settings > API Keys, copy the Project URL and the public key (publishable or anon), paste them below and press Save connection.|In Authentication > Users click Add user, create a user with your email and a password, and tick Auto Confirm User.|Type the same email in Admin email, press Copy setup SQL, open the SQL Editor in Supabase, paste and press Run.|Sign in here with that email and password, then publish the site so it starts recording visits and leads."
+    ],
+    sbOpen: ["افتح Supabase", "Open Supabase"],
+    sbUrl: ["رابط المشروع (Project URL)", "Project URL"],
+    sbKey: ["المفتاح العام (publishable أو anon key)", "Public key (publishable or anon)"],
+    sbKeyNote: ["المفتاح العام آمن يتحط في الموقع لأن البيانات مقفولة بصلاحيات، وما حدش يقدر يقرأها غير الأدمن. ممنوع تحط المفتاح السري (secret أو service_role).", "The public key is safe on the site because the data is locked by row level security and only the admin can read it. Never use the secret or service_role key."],
+    sbAdmin: ["إيميل الأدمن", "Admin email"],
+    sbSave: ["حفظ الربط", "Save connection"],
+    sbCopySql: ["نسخ كود الإعداد (SQL)", "Copy setup SQL"],
+    sbShowSql: ["عرض كود الإعداد", "Show setup SQL"],
+    sbSqlCopied: ["اتنسخ الكود. الصقه في SQL Editor في Supabase ودوس Run.", "Copied. Paste it into the Supabase SQL Editor and press Run."],
+    sbSqlSelect: ["انسخ الكود من المربع يدويًا (Ctrl+C)", "Copy the code from the box manually (Ctrl+C)"],
+    sbNeedEmail: ["اكتب إيميل الأدمن صح الأول", "Enter a valid admin email first"],
+    sbBadUrl: ["الرابط لازم يبدأ بـ https://", "The URL must start with https://"],
+    sbNeedKey: ["حط المفتاح العام", "Add the public key"],
+    sbSecretKey: ["ده مفتاح سري (secret أو service_role) وما ينفعش يتحط في الموقع أبدًا. استخدم publishable أو anon.", "That is a secret (secret or service_role) key and must never go on the site. Use the publishable or anon key."],
+    sbSavedPublish: ["اتحفظ الربط. انشر الموقع عشان يبدأ يسجّل الزيارات والعملاء.", "Connection saved. Publish the site so it starts recording visits and leads."],
+    sbDisconnected: ["اتشال الربط", "Connection removed"],
+    sbNotSetup: ["قاعدة البيانات لسه مش مربوطة", "The database is not connected yet"],
+    sbNeedLogin: ["محتاج تسجّل دخول قاعدة البيانات", "Sign in to the database first"],
+    sbNoTables: ["الجداول مش موجودة لسه. شغّل كود الإعداد (SQL) في Supabase الأول.", "The tables do not exist yet. Run the setup SQL in Supabase first."],
+    sbNotAdmin: ["الإيميل ده مش أدمن. شغّل كود الإعداد بنفس الإيميل اللي بتسجّل بيه.", "This email is not an admin. Run the setup SQL with the email you sign in with."],
+    sbBadKey: ["الجلسة أو المفتاح مش صالح. سجّل دخول تاني.", "Session or key is not valid. Sign in again."],
+    sbBadLogin: ["الإيميل أو الباسورد غلط", "Wrong email or password"],
+    sbOk: ["كله شغال. أنت أدمن وتقدر تشوف البيانات.", "All good. You are an admin and can read the data."],
+    sbStatusNone: ["لسه مش مربوطة", "Not connected"],
+    sbStatusNoLogin: ["مربوطة، ومحتاج تسجّل دخول", "Connected, sign in needed"],
+    sbLoginTitle: ["سجّل دخول قاعدة البيانات", "Sign in to the database"],
+    sbLoginBody: ["استخدم الإيميل والباسورد اللي عملتهم في Supabase.", "Use the email and password you created in Supabase."],
+    email: ["الإيميل", "Email"],
+    password: ["الباسورد", "Password"],
+    signIn: ["تسجيل الدخول", "Sign in"],
+    signOut: ["تسجيل خروج", "Sign out"],
+    signedAs: ["مسجّل دخول: {e}", "Signed in as {e}"],
+    noTrack: ["ما تحسبش زياراتي من الجهاز ده", "Don't count my visits from this device"],
+    leadsEmpty: ["لسه مفيش عملاء. أول ما حد يملأ فورم التواصل هيظهر هنا.", "No leads yet. They appear here as soon as someone fills in a form."],
+    leadsNoMatch: ["مفيش نتائج بالبحث ده", "No leads match this search"],
+    leadsSearch: ["ابحث بالاسم أو الإيميل أو الرقم أو الشركة…", "Search name, email, phone or company…"],
+    allServices: ["كل الخدمات", "All services"],
+    all: ["الكل", "All"],
+    st_new: ["جديد", "New"],
+    st_contacted: ["اتكلمنا معاه", "Contacted"],
+    st_qualified: ["مهتم جدًا", "Qualified"],
+    st_won: ["بقى عميل", "Won"],
+    st_lost: ["مش مهتم", "Lost"],
+    exportCsv: ["تصدير Excel", "Export CSV"],
+    fStatus: ["الحالة", "Status"],
+    fNotes: ["ملاحظات داخلية", "Internal notes"],
+    notesPh: ["مثلًا: كلمته يوم الأحد، مستني يبعت الـ brief…", "e.g. Called on Sunday, waiting for the brief…"],
+    lEmail: ["الإيميل", "Email"],
+    lPhone: ["الموبايل", "Phone"],
+    lCompany: ["الشركة", "Company"],
+    lService: ["الخدمة", "Service"],
+    lBudget: ["الميزانية", "Budget"],
+    lSource: ["جه منين", "Source"],
+    lPage: ["الصفحة", "Page"],
+    lLang: ["اللغة", "Language"],
+    lDate: ["التاريخ", "Date"],
+    lMessage: ["الرسالة", "Message"],
+    formContact: ["فورم التواصل", "Contact form"],
+    formConsult: ["نافذة الاستشارة", "Consultation popup"],
+    deleteLead: ["حذف", "Delete"],
+    deleteLeadQ: ["متأكد إنك عايز تحذف «{n}» نهائيًا؟", "Permanently delete “{n}”?"],
+    leadDeleted: ["اتحذف العميل", "Lead deleted"],
+    statusSaved: ["اتحفظت الحالة", "Status saved"],
+    notesSaved: ["اتحفظت الملاحظات", "Notes saved"],
+    waBtn: ["واتساب", "WhatsApp"],
+    callBtn: ["اتصال", "Call"],
+    mailBtn: ["إيميل", "Email"]
   };
 
   /* ======================================================================
@@ -462,7 +578,7 @@
     orig: {}, docs: {}, base: {}, text: {},
     uploads: {}, cache: {},
     deleted: new Set(),
-    tab: "pages", page: "index.html", file: "index.html",
+    tab: "overview", page: "index.html", file: "index.html",
     open: new Set(), seq: 0, keys: new WeakMap(), fieldByKey: new Map(),
     undo: [], lastUndo: null,
     preview: Object.assign({ device: "desktop", lang: "en", theme: "dark", select: true }, safeJSON(store.get(LS.preview)) || {}),
@@ -541,6 +657,12 @@
     drop: '<path d="M12 2.7 17.7 8.3a8 8 0 1 1-11.3 0z"/>',
     sliders: '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
     phone: '<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/>',
+    database: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.7-4 3-9 3s-9-1.3-9-3M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/>',
+    chat: '<path d="M21 11.5a8.4 8.4 0 0 1-12.8 7.2L3 20l1.4-4.9A8.4 8.4 0 1 1 21 11.5z"/>',
+    mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/>',
+    users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
+    overview: '<path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/>',
+    download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>',
     replace: '<path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>'
   };
   const icon = (n, cls) => h("span", { class: "ico" + (cls ? " " + cls : ""), "aria-hidden": "true", html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' + (ICONS[n] || "") + "</svg>" });
@@ -2036,6 +2158,7 @@
   function renderSettings() {
     const P = $("#panel");
     P.append(tabHead("tabSettings", "settingsIntro"));
+    P.append(backendCard());
     const owner = h("input", { class: "inp", dir: "ltr" }); owner.value = S.repo.owner;
     const repo = h("input", { class: "inp", dir: "ltr" }); repo.value = S.repo.repo;
     const branch = h("input", { class: "inp", dir: "ltr" }); branch.value = S.repo.branch;
@@ -2287,6 +2410,7 @@
     ".cms-flash{outline:2px solid #00CFFF!important;outline-offset:4px!important;box-shadow:0 0 0 8px rgba(0,207,255,.18)!important}"
   ].join("\n");
   const SHIM = function (o) {
+    window.__BV_PREVIEW = true;
     try {
       var g = Storage.prototype.getItem, s = Storage.prototype.setItem, has = function (k) { return Object.prototype.hasOwnProperty.call(o, k); };
       Storage.prototype.getItem = function (k) { return has(k) ? o[k] : g.call(this, k); };
@@ -2465,9 +2589,774 @@
   function savePreviewPrefs() { store.set(LS.preview, JSON.stringify(S.preview)); }
 
   /* ======================================================================
+     BACKEND (Supabase): leads + privacy-friendly visitor analytics.
+     The site writes rows with the public key; only admins listed in
+     bv_admins can read them (row level security).
+     ====================================================================== */
+  const BACKEND_RE = /(\/\* @cms-backend-start \*\/\s*const BACKEND = )(\{[^;\n]*\})(;)/;
+  const STATUSES = ["new", "contacted", "qualified", "won", "lost"];
+  const SOURCES = [[/google\./, "Google"], [/bing\./, "Bing"], [/yahoo\./, "Yahoo"], [/duckduckgo/, "DuckDuckGo"], [/facebook|^fb\.|^m\.fb/, "Facebook"],
+    [/instagram/, "Instagram"], [/linkedin|lnkd\.in/, "LinkedIn"], [/^t\.co$|twitter|^x\.com/, "X"], [/whatsapp|wa\.me/, "WhatsApp"], [/tiktok/, "TikTok"],
+    [/youtube|youtu\.be/, "YouTube"], [/snapchat/, "Snapchat"], [/chatgpt|openai/, "ChatGPT"], [/perplexity/, "Perplexity"], [/claude\.ai/, "Claude"],
+    [/gemini/, "Gemini"], [/behance/, "Behance"]];
+  const ZONES = {
+    "Africa/Cairo": ["مصر", "Egypt"], "Asia/Riyadh": ["السعودية", "Saudi Arabia"], "Asia/Dubai": ["الإمارات", "UAE"], "Asia/Kuwait": ["الكويت", "Kuwait"],
+    "Asia/Qatar": ["قطر", "Qatar"], "Asia/Bahrain": ["البحرين", "Bahrain"], "Asia/Muscat": ["عُمان", "Oman"], "Asia/Amman": ["الأردن", "Jordan"],
+    "Asia/Beirut": ["لبنان", "Lebanon"], "Asia/Baghdad": ["العراق", "Iraq"], "Asia/Damascus": ["سوريا", "Syria"], "Asia/Gaza": ["فلسطين", "Palestine"],
+    "Asia/Hebron": ["فلسطين", "Palestine"], "Africa/Khartoum": ["السودان", "Sudan"], "Africa/Tripoli": ["ليبيا", "Libya"], "Africa/Tunis": ["تونس", "Tunisia"],
+    "Africa/Algiers": ["الجزائر", "Algeria"], "Africa/Casablanca": ["المغرب", "Morocco"], "Europe/Istanbul": ["تركيا", "Türkiye"], "Europe/London": ["بريطانيا", "UK"],
+    "Europe/Berlin": ["ألمانيا", "Germany"], "Europe/Paris": ["فرنسا", "France"], "America/New_York": ["أمريكا", "USA"], "America/Chicago": ["أمريكا", "USA"],
+    "America/Los_Angeles": ["أمريكا", "USA"], "America/Toronto": ["كندا", "Canada"]
+  };
+  // Categorical slots validated for the dark panel surface (dataviz validator, all pairs).
+  const VIZ = ["#1B9BCB", "#C98500", "#D55181"];
+  const DATA = { range: 30, stats: null, leads: null, loadingStats: false, loadingLeads: false, errStats: "", errLeads: "", demo: false, metric: "visitors", filter: "all", q: "", service: "", table: false };
+
+  function siteBackend() { const m = BACKEND_RE.exec(S.text[JS_PATH] || ""); return (m && safeJSON(m[2])) || {}; }
+  function backendCfg() {
+    const local = safeJSON(store.get(LS.sbCfg));
+    if (local && local.url && local.key) return local;
+    const s = siteBackend();
+    return { url: s.url || "", key: s.key || "" };
+  }
+  function jwtRole(k) { try { return JSON.parse(atob(k.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))).role || ""; } catch (e) { return ""; } }
+  const isSecretKey = k => /^sb_secret_/.test(k) || jwtRole(k) === "service_role";
+  function writeSiteBackend(url, key) {
+    const js = S.text[JS_PATH];
+    if (!js || !BACKEND_RE.test(js)) return false;
+    const val = JSON.stringify({ url, key });
+    if (BACKEND_RE.exec(js)[2] === val) return true;
+    snapshot([JS_PATH], "backend");
+    S.text[JS_PATH] = js.replace(BACKEND_RE, (a, p1, p2, p3) => p1 + val + p3);
+    S.lastUndo = null;
+    changed();
+    return true;
+  }
+  const codeErr = code => { const e = new Error(code); e.code = code; return e; };
+
+  const SB = {
+    ready() { const c = backendCfg(); return !!(c.url && c.key); },
+    base() { return backendCfg().url.replace(/\/+$/, ""); },
+    session() { return safeJSON(store.get(LS.sbAuth)); },
+    async auth(grant, body) {
+      let r;
+      try {
+        r = await fetch(this.base() + "/auth/v1/token?grant_type=" + grant, {
+          method: "POST", headers: { apikey: backendCfg().key, "Content-Type": "application/json" }, body: JSON.stringify(body)
+        });
+      } catch (e) { throw codeErr("net"); }
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) { const e = new Error(j.error_description || j.msg || j.message || r.statusText); e.status = r.status; e.code = j.error_code || j.error || ""; throw e; }
+      const a = { access_token: j.access_token, refresh_token: j.refresh_token, expires_at: Date.now() + (j.expires_in || 3600) * 1000, email: (j.user && j.user.email) || body.email || "" };
+      store.set(LS.sbAuth, JSON.stringify(a));
+      return a;
+    },
+    signIn(email, password) { return this.auth("password", { email, password }); },
+    signOut() { store.del(LS.sbAuth); },
+    async token() {
+      let a = this.session();
+      if (!a) return null;
+      if (Date.now() > (a.expires_at || 0) - 60000) {
+        try { a = await this.auth("refresh_token", { refresh_token: a.refresh_token }); }
+        catch (e) { if (e.code !== "net") this.signOut(); return null; }
+      }
+      return a.access_token;
+    },
+    async req(path, opts = {}) {
+      if (!this.ready()) throw codeErr("noBackend");
+      const tok = await this.token();
+      if (!tok) throw codeErr("noAuth");
+      const headers = Object.assign({ apikey: backendCfg().key, Authorization: "Bearer " + tok, "Content-Type": "application/json" }, opts.headers || {});
+      let r;
+      try { r = await fetch(this.base() + path, { method: opts.method || "GET", headers, body: opts.body, cache: "no-store" }); }
+      catch (e) { throw codeErr("net"); }
+      if (!r.ok) {
+        let j = {};
+        try { j = await r.json(); } catch (e) { /* ignore */ }
+        const e = new Error(j.message || j.msg || r.statusText); e.status = r.status; e.code = j.code || "";
+        if (r.status === 401) this.signOut();
+        throw e;
+      }
+      if (r.status === 204) return null;
+      const txt = await r.text();
+      return txt ? JSON.parse(txt) : null;
+    }
+  };
+  function sbErrorText(e) {
+    if (!e) return "";
+    if (e.code === "noBackend") return t("sbNotSetup");
+    if (e.code === "noAuth") return t("sbNeedLogin");
+    if (e.code === "net") return t("errNetwork");
+    if (/invalid login credentials|invalid_credentials/i.test(e.message + " " + e.code)) return t("sbBadLogin");
+    if (e.code === "42P01" || e.code === "PGRST205" || e.code === "PGRST202" || /does not exist|schema cache/i.test(e.message)) return t("sbNoTables");
+    if (e.code === "42501" || /not allowed|permission denied/i.test(e.message)) return t("sbNotAdmin");
+    if (e.status === 401) return t("sbBadKey");
+    return e.message || String(e);
+  }
+  function buildSql(email) {
+    const em = email.trim().toLowerCase().replace(/'/g, "''");
+    return `-- Brand Vitals dashboard: leads + visitor analytics
+-- Paste into Supabase > SQL Editor > New query, then press Run. Safe to run again.
+
+create table if not exists public.bv_admins (email text primary key);
+insert into public.bv_admins (email) values ('${em}') on conflict do nothing;
+
+create table if not exists public.bv_leads (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  name text not null check (char_length(name) between 1 and 200),
+  email text check (char_length(email) <= 200),
+  phone text check (char_length(phone) <= 60),
+  company text check (char_length(company) <= 200),
+  service text check (char_length(service) <= 120),
+  budget text check (char_length(budget) <= 120),
+  message text check (char_length(message) <= 5000),
+  form text check (char_length(form) <= 40),
+  page text check (char_length(page) <= 300),
+  lang text check (char_length(lang) <= 8),
+  referrer text check (char_length(referrer) <= 300),
+  utm_source text check (char_length(utm_source) <= 120),
+  utm_medium text check (char_length(utm_medium) <= 120),
+  utm_campaign text check (char_length(utm_campaign) <= 160),
+  visitor text check (char_length(visitor) <= 64),
+  status text not null default 'new' check (status in ('new','contacted','qualified','won','lost')),
+  notes text check (char_length(notes) <= 5000),
+  updated_at timestamptz
+);
+create index if not exists bv_leads_created_idx on public.bv_leads (created_at desc);
+
+create table if not exists public.bv_pageviews (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  path text not null check (char_length(path) <= 300),
+  title text check (char_length(title) <= 300),
+  referrer text check (char_length(referrer) <= 300),
+  utm_source text check (char_length(utm_source) <= 120),
+  utm_medium text check (char_length(utm_medium) <= 120),
+  utm_campaign text check (char_length(utm_campaign) <= 160),
+  visitor text check (char_length(visitor) <= 64),
+  session text check (char_length(session) <= 64),
+  is_new boolean,
+  lang text check (char_length(lang) <= 8),
+  device text check (char_length(device) <= 16),
+  tz text check (char_length(tz) <= 64)
+);
+create index if not exists bv_pageviews_created_idx on public.bv_pageviews (created_at);
+
+alter table public.bv_admins enable row level security;
+alter table public.bv_leads enable row level security;
+alter table public.bv_pageviews enable row level security;
+
+create or replace function public.bv_is_admin() returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.bv_admins a where a.email = lower(coalesce(auth.jwt() ->> 'email', '')));
+$$;
+
+-- Visitors can only add rows. Only admins can read, update or delete.
+drop policy if exists bv_leads_insert on public.bv_leads;
+create policy bv_leads_insert on public.bv_leads for insert to anon, authenticated
+  with check (status = 'new' and notes is null and updated_at is null);
+drop policy if exists bv_leads_admin on public.bv_leads;
+create policy bv_leads_admin on public.bv_leads for all to authenticated
+  using (public.bv_is_admin()) with check (public.bv_is_admin());
+drop policy if exists bv_pv_insert on public.bv_pageviews;
+create policy bv_pv_insert on public.bv_pageviews for insert to anon, authenticated with check (true);
+drop policy if exists bv_pv_admin on public.bv_pageviews;
+create policy bv_pv_admin on public.bv_pageviews for all to authenticated
+  using (public.bv_is_admin()) with check (public.bv_is_admin());
+
+grant usage on schema public to anon, authenticated;
+grant insert on public.bv_leads, public.bv_pageviews to anon, authenticated;
+grant select, update, delete on public.bv_leads, public.bv_pageviews to authenticated;
+
+create or replace function public.bv_stats(span int default 30, zone text default 'Africa/Cairo')
+returns json language plpgsql stable security definer set search_path = public as $$
+declare
+  n int := greatest(1, least(coalesce(span, 30), 366));
+  since timestamptz := now() - make_interval(days => n);
+  prev timestamptz := now() - make_interval(days => n * 2);
+  result json;
+begin
+  if not public.bv_is_admin() then
+    raise exception 'not allowed' using errcode = '42501';
+  end if;
+  begin
+    perform now() at time zone zone;
+  exception when others then
+    zone := 'UTC';
+  end;
+  with pv as (select * from public.bv_pageviews where created_at >= since),
+       pp as (select * from public.bv_pageviews where created_at >= prev and created_at < since),
+       ld as (select * from public.bv_leads where created_at >= since),
+       ss as (select session, count(*) as c from pv group by session),
+       ps as (select session, count(*) as c from pp group by session)
+  select json_build_object(
+    'days', n,
+    'visitors', (select count(distinct visitor) from pv),
+    'new_visitors', (select count(distinct visitor) from pv where is_new),
+    'pageviews', (select count(*) from pv),
+    'sessions', (select count(*) from ss),
+    'bounces', (select count(*) from ss where c = 1),
+    'leads', (select count(*) from ld),
+    'prev_visitors', (select count(distinct visitor) from pp),
+    'prev_pageviews', (select count(*) from pp),
+    'prev_sessions', (select count(*) from ps),
+    'prev_bounces', (select count(*) from ps where c = 1),
+    'prev_leads', (select count(*) from public.bv_leads where created_at >= prev and created_at < since),
+    'live', (select count(distinct visitor) from public.bv_pageviews where created_at >= now() - interval '5 minutes'),
+    'daily', coalesce((select json_agg(d order by d.day) from (
+        select to_char(g.day, 'YYYY-MM-DD') as day,
+               coalesce(v.visitors, 0) as visitors, coalesce(v.views, 0) as views, coalesce(l.leads, 0) as leads
+        from generate_series(date_trunc('day', since at time zone zone), date_trunc('day', now() at time zone zone), interval '1 day') as g(day)
+        left join (select date_trunc('day', created_at at time zone zone) as dd, count(distinct visitor) as visitors, count(*) as views from pv group by 1) v on v.dd = g.day
+        left join (select date_trunc('day', created_at at time zone zone) as dd, count(*) as leads from ld group by 1) l on l.dd = g.day
+      ) d), '[]'::json),
+    'pages', coalesce((select json_agg(x) from (select path as k, count(*) as views, count(distinct visitor) as visitors from pv group by path order by 2 desc limit 12) x), '[]'::json),
+    'sources', coalesce((select json_agg(x) from (select coalesce(nullif(utm_source, ''), nullif(referrer, ''), '') as k, count(distinct visitor) as visitors from pv group by 1 order by 2 desc limit 15) x), '[]'::json),
+    'devices', coalesce((select json_agg(x) from (select coalesce(nullif(device, ''), 'other') as k, count(distinct visitor) as visitors from pv group by 1 order by 2 desc) x), '[]'::json),
+    'langs', coalesce((select json_agg(x) from (select coalesce(nullif(lang, ''), 'en') as k, count(distinct visitor) as visitors from pv group by 1 order by 2 desc) x), '[]'::json),
+    'zones', coalesce((select json_agg(x) from (select coalesce(nullif(pv.tz, ''), '') as k, count(distinct visitor) as visitors from pv group by 1 order by 2 desc limit 15) x), '[]'::json)
+  ) into result;
+  return result;
+end;
+$$;
+
+revoke execute on function public.bv_stats(int, text) from public, anon;
+grant execute on function public.bv_is_admin() to authenticated;
+grant execute on function public.bv_stats(int, text) to authenticated;
+`;
+  }
+
+  /* ---------- data ---------- */
+  const localTz = () => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || "Africa/Cairo"; } catch (e) { return "Africa/Cairo"; } };
+  async function loadStats() {
+    if (DATA.demo) { DATA.stats = demoStats(DATA.range); return; }
+    DATA.loadingStats = true; DATA.errStats = "";
+    try { DATA.stats = await SB.req("/rest/v1/rpc/bv_stats", { method: "POST", body: JSON.stringify({ span: DATA.range, zone: localTz() }) }); }
+    catch (e) { DATA.errStats = sbErrorText(e); }
+    DATA.loadingStats = false;
+  }
+  async function loadLeads() {
+    if (DATA.demo) { if (!DATA.leads) DATA.leads = demoLeads(); return; }
+    DATA.loadingLeads = true; DATA.errLeads = "";
+    try { DATA.leads = (await SB.req("/rest/v1/bv_leads?select=*&order=created_at.desc&limit=2000")) || []; }
+    catch (e) { DATA.errLeads = sbErrorText(e); }
+    DATA.loadingLeads = false;
+    renderRail();
+  }
+  let refreshing = null;
+  function refreshData(which) {
+    if (refreshing) return refreshing;
+    const jobs = [];
+    if (which !== "leads") jobs.push(loadStats());
+    if (which !== "stats") jobs.push(loadLeads());
+    refreshing = Promise.all(jobs).then(() => {
+      refreshing = null;
+      if (S.tab === "overview" || S.tab === "leads") renderTab(true);
+    });
+    return refreshing;
+  }
+  function resetData() { DATA.stats = null; DATA.leads = null; DATA.errStats = ""; DATA.errLeads = ""; }
+
+  /* ---------- formatting ---------- */
+  const numFmt = new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 });
+  const compactFmt = new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 });
+  const fmtNum = v => { v = +v || 0; return Math.abs(v) >= 10000 ? compactFmt.format(v) : numFmt.format(v); };
+  const dateLoc = () => (S.ui === "ar" ? "ar-EG-u-nu-latn" : "en-GB");
+  const fmtDay = s => { const p = String(s).split("-").map(Number); return new Date(p[0], p[1] - 1, p[2]).toLocaleDateString(dateLoc(), { day: "numeric", month: "short" }); };
+  const fmtDate = s => new Date(s).toLocaleString(dateLoc(), { dateStyle: "medium", timeStyle: "short" });
+  function timeAgo(s) {
+    const diff = (new Date(s).getTime() - Date.now()) / 1000;
+    if (Math.abs(diff) < 60) return t("justNow");
+    const rtf = new Intl.RelativeTimeFormat(dateLoc(), { numeric: "auto" });
+    for (const [u, sec] of [["year", 31536000], ["month", 2592000], ["week", 604800], ["day", 86400], ["hour", 3600], ["minute", 60]]) {
+      if (Math.abs(diff) >= sec) return rtf.format(Math.round(diff / sec), u);
+    }
+    return t("justNow");
+  }
+  const srcName = k => { if (!k) return t("direct"); const s = String(k).toLowerCase(); for (const [re, n] of SOURCES) if (re.test(s)) return n; return k; };
+  const zoneName = k => (ZONES[k] ? ZONES[k][S.ui === "ar" ? 0 : 1] : k ? k.split("/").pop().replace(/_/g, " ") : t("unknown"));
+  const deviceName = k => ({ mobile: t("dMobile"), desktop: t("dDesktop"), tablet: t("dTablet") }[k] || t("other"));
+  const langName = k => (k === "ar" ? "العربية" : k === "en" ? "English" : k || t("unknown"));
+  function merge(rows, nameOf, key = "visitors") {
+    const m = new Map();
+    for (const r of rows || []) { const n = nameOf(r.k); m.set(n, (m.get(n) || 0) + (+r[key] || 0)); }
+    return [...m.entries()].map(([label, v]) => ({ label, v })).sort((a, b) => b.v - a.v);
+  }
+  function waDigits(phone) {
+    let d = String(phone || "").replace(/[^\d]/g, "");
+    if (!d) return "";
+    if (d.startsWith("00")) d = d.slice(2);
+    else if (/^0\d{10}$/.test(d)) d = "20" + d.slice(1); // Egyptian local mobile 01xxxxxxxxx
+    return d.length >= 8 ? d : "";
+  }
+  const initials = n => String(n || "?").trim().split(/\s+/).slice(0, 2).map(w => w.charAt(0)).join("").toUpperCase() || "?";
+
+  /* ---------- sample data (clearly labelled, never mixed with real data) ---------- */
+  function prng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let x = Math.imul(seed ^ seed >>> 15, 1 | seed); x = x + Math.imul(x ^ x >>> 7, 61 | x) ^ x; return ((x ^ x >>> 14) >>> 0) / 4294967296; }; }
+  const isoDay = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  function demoSeries(days, offset) {
+    const rnd = prng(97 + offset);
+    const out = [];
+    for (let i = days; i >= 0; i--) {
+      const d = new Date(Date.now() - (i + offset) * 864e5);
+      const wk = d.getDay() === 5 || d.getDay() === 6 ? 0.7 : 1;
+      const v = Math.round((30 + (days - i) * (offset ? 0.2 : 0.35) + rnd() * 20) * wk);
+      out.push({ day: isoDay(d), visitors: v, views: Math.round(v * (1.8 + rnd() * 0.9)), leads: rnd() < 0.42 ? 1 + Math.round(rnd() * 1.4) : 0 });
+    }
+    return out;
+  }
+  function demoStats(days) {
+    const cur = demoSeries(days, 0), prev = demoSeries(days, days);
+    const sum = (a, k) => a.reduce((s, r) => s + r[k], 0);
+    const visitors = Math.round(sum(cur, "visitors") * 0.8), pageviews = sum(cur, "views"), sessions = Math.round(sum(cur, "visitors") * 0.95);
+    const pv = Math.round(sum(prev, "visitors") * 0.8), psess = Math.round(sum(prev, "visitors") * 0.95);
+    const share = (arr, total) => arr.map(([k, f]) => ({ k, visitors: Math.round(total * f), views: Math.round(pageviews * f) }));
+    return {
+      days, visitors, new_visitors: Math.round(visitors * 0.74), pageviews, sessions, bounces: Math.round(sessions * 0.41), leads: sum(cur, "leads"),
+      prev_visitors: pv, prev_pageviews: sum(prev, "views"), prev_sessions: psess, prev_bounces: Math.round(psess * 0.46), prev_leads: sum(prev, "leads"),
+      live: 3, daily: cur,
+      pages: share([["index.html", 0.46], ["solutions.html", 0.16], ["work.html", 0.12], ["contact.html", 0.1], ["about.html", 0.08], ["products.html", 0.05], ["careers.html", 0.02], ["privacy.html", 0.01]], visitors),
+      sources: share([["google.com", 0.41], ["", 0.24], ["instagram.com", 0.15], ["facebook.com", 0.09], ["linkedin.com", 0.06], ["chatgpt.com", 0.03], ["wa.me", 0.02]], visitors),
+      devices: share([["mobile", 0.63], ["desktop", 0.32], ["tablet", 0.05]], visitors),
+      langs: share([["en", 0.57], ["ar", 0.43]], visitors),
+      zones: share([["Africa/Cairo", 0.78], ["Asia/Riyadh", 0.09], ["Asia/Dubai", 0.06], ["Asia/Kuwait", 0.03], ["Europe/London", 0.02], ["America/New_York", 0.02]], visitors)
+    };
+  }
+  function demoLeads() {
+    const ar = S.ui === "ar";
+    const tag = ar ? " (تجريبي)" : " (sample)";
+    const rows = [
+      ["Ahmed Hassan", "Nile Home Furnishing", "SEM / Google Ads", "30,000 to 50,000 EGP", "new", 0.08, "google.com", "We run two showrooms in New Cairo and want more store visits from Google."],
+      ["Mariam Adel", "Glow Clinic", "Social media ads", "10,000 to 30,000 EGP", "new", 0.9, "instagram.com", "Looking for a monthly Instagram and TikTok ads plan for a dermatology clinic."],
+      ["Omar Khaled", "Tamr Foods", "Multiple services", "100,000+ EGP", "contacted", 2.4, "", "Launching a new product line, need branding, a website and paid media."],
+      ["Nour El Din", "", "SEO", "Under 10,000 EGP", "qualified", 4.2, "linkedin.com", "Our e-commerce site gets little organic traffic. Can you audit it?"],
+      ["Sara Mostafa", "Vista Real Estate", "Branding & design", "50,000 to 100,000 EGP", "won", 9.5, "google.com", "Rebrand for a real estate developer ahead of a new compound launch."],
+      ["Youssef Tarek", "Pulse Gym", "Content production", "", "lost", 15, "facebook.com", "Need monthly reels and photography for three branches."]
+    ];
+    return rows.map((r, i) => ({
+      id: "demo-" + i, created_at: new Date(Date.now() - r[5] * 864e5).toISOString(), name: r[0] + tag, company: r[1], service: r[2], budget: r[3], status: r[4],
+      email: "sample" + (i + 1) + "@example.com", phone: "+20 100 000 00" + String(i + 1).padStart(2, "0"), message: r[7], referrer: r[6],
+      form: i % 3 === 1 ? "consult" : "contact", page: i % 3 === 1 ? "index.html" : "contact.html", lang: i % 2 ? "ar" : "en", notes: i === 2 ? (ar ? "كلمته، مستني يبعت الـ brief." : "Called, waiting for the brief.") : ""
+    }));
+  }
+
+  /* ---------- shared building blocks ---------- */
+  function loadBox() { return h("div", { class: "loadbox" }, h("span", { class: "spin" }), h("span", null, t("loadingData"))); }
+  function errBox(msg, retry) { return h("div", { class: "errbox errbox--row" }, icon("warn"), h("span", null, msg), retry ? btn(t("retry"), "refresh", retry, "sm") : null); }
+  function demoBanner() {
+    return h("div", { class: "demo-banner" }, icon("warn"), h("span", null, t("demoBanner")),
+      btn(t("demoStop"), "close", () => { DATA.demo = false; resetData(); renderTab(); }, "sm"));
+  }
+  function setupHero() {
+    return h("section", { class: "setup" },
+      h("div", { class: "setup__ico" }, icon("database")),
+      h("h3", null, t("setupTitle")),
+      h("p", { class: "muted" }, t("setupBody")),
+      h("div", { class: "row row--center" },
+        btn(t("setupStart"), "settings", () => { S.open.add("sb-card"); setTab("settings"); }, "primary"),
+        btn(t("demoShow"), "eye", () => { DATA.demo = true; resetData(); renderTab(); }, "ghost")));
+  }
+  function signInForm(onDone) {
+    const em = h("input", { class: "inp", type: "email", dir: "ltr", autocomplete: "username", placeholder: "you@brandvitals.io" });
+    em.value = store.get(LS.sbEmail) || "";
+    const pw = h("input", { class: "inp", type: "password", dir: "ltr", autocomplete: "current-password" });
+    const msg = h("p", { class: "fld__msg" });
+    const go = h("button", { type: "submit", class: "btn btn--primary" }, icon("key"), h("span", null, t("signIn")));
+    const form = h("form", { class: "signin", onsubmit: async e => {
+      e.preventDefault();
+      msg.textContent = "";
+      go.disabled = true;
+      try {
+        await SB.signIn(em.value.trim(), pw.value);
+        store.set(LS.sbEmail, em.value.trim());
+        store.set(LS.noTrack, "1");
+        resetData();
+        toast(t("signedAs", { e: em.value.trim() }), "ok");
+        if (onDone) onDone();
+      } catch (err) { msg.textContent = sbErrorText(err); }
+      go.disabled = false;
+    } },
+      h("div", { class: "grid2" }, h("label", { class: "fld" }, h("span", { class: "fld__label" }, t("email")), em), h("label", { class: "fld" }, h("span", { class: "fld__label" }, t("password")), pw)),
+      h("div", { class: "row" }, go), msg);
+    return form;
+  }
+  function loginCard() {
+    return h("section", { class: "setup setup--sm" },
+      h("div", { class: "setup__ico" }, icon("key")),
+      h("h3", null, t("sbLoginTitle")), h("p", { class: "muted" }, t("sbLoginBody")),
+      signInForm(() => renderTab()));
+  }
+  // Returns true when the tab can show data (connected + signed in, or sample mode).
+  function dataGate(P) {
+    if (DATA.demo) { P.append(demoBanner()); return true; }
+    if (!SB.ready()) { P.append(setupHero()); return false; }
+    if (!SB.session()) { P.append(loginCard()); return false; }
+    return true;
+  }
+  function statusPill(st) { return h("span", { class: "st st--" + st }, h("i"), t("st_" + st)); }
+
+  /* ---------- charts ---------- */
+  function niceStep(x) { if (x <= 1) return 1; const p = Math.pow(10, Math.floor(Math.log10(x))); const f = x / p; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p; }
+  const escXml = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  function lineChart(rows, key, label) {
+    const wrap = h("div", { class: "chart", tabindex: "0", role: "img", "aria-label": label });
+    const tip = h("div", { class: "tip", hidden: true });
+    wrap.append(tip);
+    let idx = -1, geo = null;
+    const draw = () => {
+      const old = wrap.querySelector("svg");
+      if (old) old.remove();
+      const W = Math.max(280, Math.floor(wrap.clientWidth)), H = 250, pl = 44, pr = 46, pt = 14, pb = 30;
+      const n = rows.length;
+      const vals = rows.map(r => +r[key] || 0);
+      const step = niceStep(Math.max(...vals, 1) / 4), max = step * 4;
+      const x = i => pl + (n <= 1 ? (W - pl - pr) / 2 : i * (W - pl - pr) / (n - 1));
+      const y = v => pt + (H - pt - pb) * (1 - v / max);
+      geo = { x, y, n, pl, pr, W, vals };
+      let s = '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + " " + H + '" aria-hidden="true">';
+      for (let i = 0; i <= 4; i++) {
+        const yy = Math.round(y(step * i)) + 0.5;
+        s += '<line x1="' + pl + '" x2="' + (W - pr) + '" y1="' + yy + '" y2="' + yy + '" class="' + (i ? "c-grid" : "c-base") + '"/>';
+        s += '<text x="' + (pl - 10) + '" y="' + (yy + 4) + '" class="c-tick" text-anchor="end">' + escXml(fmtNum(step * i)) + "</text>";
+      }
+      const every = Math.max(1, Math.ceil(n / 6));
+      for (let i = 0; i < n; i += every) s += '<text x="' + x(i).toFixed(1) + '" y="' + (H - 9) + '" class="c-tick" text-anchor="middle">' + escXml(fmtDay(rows[i].day)) + "</text>";
+      if (n) {
+        const pts = vals.map((v, i) => x(i).toFixed(1) + "," + y(v).toFixed(1));
+        s += '<path class="c-area" d="M' + x(0).toFixed(1) + "," + y(0) + " L" + pts.join(" L") + " L" + x(n - 1).toFixed(1) + "," + y(0) + ' Z"/>';
+        s += '<polyline class="c-line" points="' + pts.join(" ") + '"/>';
+        const lv = vals[n - 1];
+        s += '<circle class="c-dot" cx="' + x(n - 1).toFixed(1) + '" cy="' + y(lv).toFixed(1) + '" r="4"/>';
+        s += '<text class="c-end" x="' + (x(n - 1) + 9).toFixed(1) + '" y="' + (y(lv) + 4).toFixed(1) + '">' + escXml(fmtNum(lv)) + "</text>";
+      }
+      s += '<line class="c-cross" y1="' + pt + '" y2="' + (H - pb) + '" x1="0" x2="0" visibility="hidden"/><circle class="c-hdot" r="4" cx="0" cy="0" visibility="hidden"/>';
+      s += '<rect class="c-hit" x="' + pl + '" y="0" width="' + Math.max(1, W - pl - pr) + '" height="' + H + '"/></svg>';
+      wrap.insertAdjacentHTML("afterbegin", s);
+      const svg = wrap.querySelector("svg");
+      svg.addEventListener("pointermove", e => {
+        const r = svg.getBoundingClientRect();
+        show(Math.round((e.clientX - r.left - pl) / ((W - pl - pr) / Math.max(1, n - 1))));
+      });
+      svg.addEventListener("pointerleave", hide);
+      if (idx >= 0) show(idx);
+    };
+    const show = i => {
+      if (!geo || !geo.n) return;
+      idx = Math.max(0, Math.min(geo.n - 1, i));
+      const svg = wrap.querySelector("svg"), r = rows[idx], cx = geo.x(idx), cy = geo.y(geo.vals[idx]);
+      const cr = svg.querySelector(".c-cross"), hd = svg.querySelector(".c-hdot");
+      cr.setAttribute("x1", cx); cr.setAttribute("x2", cx); cr.setAttribute("visibility", "visible");
+      hd.setAttribute("cx", cx); hd.setAttribute("cy", cy); hd.setAttribute("visibility", "visible");
+      tip.replaceChildren(h("div", { class: "tip__date" }, fmtDay(r.day)),
+        ...[["visitors", t("kVisitors")], ["views", t("kViews")], ["leads", t("kLeads")]].map(([k, l]) =>
+          h("div", { class: "tip__row" + (k === key ? " is-key" : "") }, h("i"), h("b", null, fmtNum(r[k])), h("span", null, l))));
+      tip.hidden = false;
+      const tw = tip.offsetWidth;
+      tip.style.left = Math.round(cx + 14 + tw > geo.W ? cx - 14 - tw : cx + 14) + "px";
+    };
+    const hide = () => {
+      idx = -1;
+      tip.hidden = true;
+      const svg = wrap.querySelector("svg");
+      if (svg) { svg.querySelector(".c-cross").setAttribute("visibility", "hidden"); svg.querySelector(".c-hdot").setAttribute("visibility", "hidden"); }
+    };
+    wrap.addEventListener("keydown", e => {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); show((idx < 0 ? rows.length : idx) + (e.key === "ArrowRight" ? 1 : -1)); }
+      else if (e.key === "Escape") hide();
+    });
+    wrap.addEventListener("blur", hide);
+    requestAnimationFrame(draw);
+    if (window.ResizeObserver) { let w0 = 0; new ResizeObserver(() => { const w = Math.floor(wrap.clientWidth); if (w && w !== w0) { w0 = w; draw(); } }).observe(wrap); }
+    return wrap;
+  }
+  function barList(items, fmt, emptyText) {
+    if (!items.length) return h("p", { class: "muted small" }, emptyText || t("noData"));
+    const max = Math.max(...items.map(i => i.v), 1);
+    return h("div", { class: "blist" }, items.map(i => h("div", { class: "brow", title: i.label + ": " + fmtNum(i.v) },
+      h("div", { class: "brow__top" }, h("span", { class: "brow__l" }, i.label, i.hint ? h("code", null, i.hint) : null), h("span", { class: "brow__v" }, fmt ? fmt(i.v) : fmtNum(i.v))),
+      h("div", { class: "brow__track" }, h("i", { style: "width:" + Math.max(2, i.v / max * 100).toFixed(1) + "%" })))));
+  }
+  function splitBar(items) {
+    const total = items.reduce((s, i) => s + i.v, 0);
+    if (!total) return h("p", { class: "muted small" }, t("noData"));
+    const top = items.slice(0, 3);
+    return h("div", { class: "split" },
+      h("div", { class: "split__bar", role: "img", "aria-label": top.map(i => i.label + " " + Math.round(i.v / total * 100) + "%").join(", ") },
+        top.map((i, n) => h("i", { style: "flex:" + i.v + ";background:" + VIZ[n], title: i.label + ": " + Math.round(i.v / total * 100) + "%" }))),
+      h("ul", { class: "legend" }, top.map((i, n) => h("li", null, h("span", { class: "legend__sw", style: "background:" + VIZ[n] }), h("span", { class: "legend__l" }, i.label),
+        h("b", null, Math.round(i.v / total * 100) + "%"), h("span", { class: "muted small" }, fmtNum(i.v))))));
+  }
+  function deltaEl(cur, prev, goodUp = true, unit) {
+    let d, txt, unitTxt = "";
+    if (unit === "pp") {
+      if (!prev && !cur) return null;
+      d = cur - prev;
+      txt = (d > 0 ? "+" : "") + d.toFixed(1);
+      unitTxt = S.ui === "ar" ? "نقطة" : "pts";
+    } else {
+      if (!prev) return cur ? h("span", { class: "kpi__delta is-flat" }, t("newPeriod")) : null;
+      d = (cur - prev) / prev * 100;
+      txt = (d > 0 ? "+" : "") + d.toFixed(0) + "%";
+    }
+    const dir = Math.abs(d) < (unit === "pp" ? 0.05 : 0.5) ? "flat" : d > 0 ? "up" : "down";
+    if (dir === "flat") txt = unit === "pp" ? "0" : "0%";
+    const good = dir === "flat" ? "is-flat" : (dir === "up") === goodUp ? "is-good" : "is-bad";
+    return h("span", { class: "kpi__delta " + good, title: t("vsPrev") }, dir === "flat" ? "" : icon(dir === "up" ? "up" : "down"),
+      h("bdi", { dir: "ltr" }, txt), unitTxt ? h("span", null, unitTxt) : null, h("span", { class: "kpi__vs" }, t("vsPrev")));
+  }
+
+  /* ---------- OVERVIEW TAB ---------- */
+  function rangeRow(onRefresh) {
+    const live = DATA.stats && DATA.stats.live != null ? h("span", { class: "live" }, h("i"), t("liveNow", { n: fmtNum(DATA.stats.live) })) : null;
+    return h("div", { class: "filters" },
+      h("div", { class: "seg" }, [7, 30, 90].map(n => h("button", { type: "button", class: DATA.range === n ? "is-on" : "", onclick: () => { if (DATA.range === n) return; DATA.range = n; DATA.stats = null; renderTab(true); } }, t("lastDays", { n })))),
+      btn(t("refreshData"), "refresh", onRefresh, "sm ghost"), live);
+  }
+  function renderOverview() {
+    const P = $("#panel");
+    P.append(tabHead("tabOverview", "overviewIntro"));
+    if (!dataGate(P)) return;
+    P.append(rangeRow(() => { DATA.stats = null; resetData(); renderTab(true); }));
+    if (DATA.errStats) { P.append(errBox(DATA.errStats, () => { DATA.errStats = ""; refreshData(); })); return; }
+    const s = DATA.stats;
+    if (!s) { P.append(loadBox()); if (!DATA.loadingStats) refreshData(); return; }
+    const conv = s.visitors ? s.leads / s.visitors * 100 : 0, pconv = s.prev_visitors ? s.prev_leads / s.prev_visitors * 100 : 0;
+    const bounce = s.sessions ? s.bounces / s.sessions * 100 : 0, pbounce = s.prev_sessions ? s.prev_bounces / s.prev_sessions * 100 : 0;
+    const ppv = s.sessions ? s.pageviews / s.sessions : 0;
+    const tile = (id, label, value, delta, chartable) => h(chartable ? "button" : "div", {
+      type: chartable ? "button" : null, class: "kpi" + (chartable ? " kpi--btn" : "") + (DATA.metric === id ? " is-on" : ""), "aria-pressed": chartable ? String(DATA.metric === id) : null,
+      onclick: chartable ? () => { DATA.metric = id; renderTab(true); } : null
+    }, h("span", { class: "kpi__label" }, label), h("span", { class: "kpi__value" }, value), delta || h("span", { class: "kpi__delta is-flat" }, " "));
+    P.append(h("div", { class: "kpis" },
+      tile("visitors", t("kVisitors"), fmtNum(s.visitors), deltaEl(s.visitors, s.prev_visitors), true),
+      tile("views", t("kViews"), fmtNum(s.pageviews), deltaEl(s.pageviews, s.prev_pageviews), true),
+      tile("leads", t("kLeads"), fmtNum(s.leads), deltaEl(s.leads, s.prev_leads), true),
+      tile("conv", t("kConv"), conv.toFixed(1) + "%", deltaEl(conv, pconv, true, "pp")),
+      tile("bounce", t("kBounce"), bounce.toFixed(0) + "%", deltaEl(bounce, pbounce, false, "pp")),
+      tile("ppv", t("kPPV"), ppv.toFixed(1), null)));
+    const mLabel = { visitors: t("kVisitors"), views: t("kViews"), leads: t("kLeads") }[DATA.metric] || t("kVisitors");
+    const key = DATA.metric === "views" ? "views" : DATA.metric === "leads" ? "leads" : "visitors";
+    const daily = s.daily || [];
+    const table = h("table", { class: "dtable", hidden: !DATA.table },
+      h("thead", null, h("tr", null, h("th", null, t("colDay")), h("th", null, t("kVisitors")), h("th", null, t("kViews")), h("th", null, t("kLeads")))),
+      h("tbody", null, daily.slice().reverse().map(r => h("tr", null, h("td", null, fmtDay(r.day)), h("td", null, fmtNum(r.visitors)), h("td", null, fmtNum(r.views)), h("td", null, fmtNum(r.leads))))));
+    const tbtn = btn(DATA.table ? t("hideTable") : t("showTable"), "sliders", () => { DATA.table = !DATA.table; table.hidden = !DATA.table; tbtn.querySelector("span:last-child").textContent = DATA.table ? t("hideTable") : t("showTable"); }, "sm ghost");
+    P.append(h("section", { class: "card chartcard" },
+      h("div", { class: "chartcard__head" }, h("h3", { class: "card__title card__title--plain" }, icon("overview"), h("span", null, t("chartOf", { m: mLabel }))), tbtn),
+      daily.length ? lineChart(daily, key, t("chartOf", { m: mLabel })) : h("p", { class: "muted small pad" }, t("noData")), table));
+    const pages = (s.pages || []).map(r => ({ label: pageName(r.k), hint: r.k, v: +r.views || 0 }));
+    const recent = (DATA.leads || []).slice(0, 5);
+    const since = Date.now() - DATA.range * 864e5;
+    const byService = merge((DATA.leads || []).filter(l => new Date(l.created_at).getTime() >= since).map(l => ({ k: l.service || "", visitors: 1 })), k => k || t("other"));
+    P.append(h("div", { class: "ov-grid" },
+      card("pages", t("topPages"), [h("p", { class: "muted small" }, t("kViews")), barList(pages)]),
+      card("global", t("sources"), [h("p", { class: "muted small" }, t("kVisitors")), barList(merge(s.sources, srcName).slice(0, 8))]),
+      card("desktop", t("devices"), splitBar(merge(s.devices, deviceName))),
+      card("lang", t("languages"), splitBar(merge(s.langs, langName))),
+      card("global", t("regions"), [barList(merge(s.zones, zoneName).slice(0, 8)), h("p", { class: "muted small" }, t("regionsNote"))]),
+      card("users", t("leadsByService"), barList(byService.slice(0, 8), null, t("leadsEmpty"))),
+      h("section", { class: "card ov-wide" },
+        h("div", { class: "chartcard__head" }, h("h3", { class: "card__title card__title--plain" }, icon("users"), h("span", null, t("latestLeads"))), btn(t("viewAll"), "external", () => setTab("leads"), "sm ghost")),
+        h("div", { class: "card__body" }, recent.length ? h("div", { class: "mini-leads" }, recent.map(l => h("button", {
+          type: "button", class: "mini-lead", onclick: () => { S.open.add("lead|" + l.id); setTab("leads"); }
+        }, h("span", { class: "lead__av" }, initials(l.name)), h("span", { class: "mini-lead__who" }, h("b", null, l.name), h("span", null, l.service || l.company || l.email || "")),
+          h("span", { class: "lead__time" }, timeAgo(l.created_at)), statusPill(l.status)))) : h("p", { class: "muted small" }, DATA.loadingLeads ? t("loadingData") : t("leadsEmpty"))))));
+  }
+
+  /* ---------- LEADS TAB ---------- */
+  async function updateLead(l, patch, msgKey) {
+    const before = Object.assign({}, l);
+    Object.assign(l, patch);
+    if (DATA.demo) { toast(t(msgKey), "ok"); return true; }
+    try {
+      await SB.req("/rest/v1/bv_leads?id=eq." + encodeURIComponent(l.id), { method: "PATCH", headers: { Prefer: "return=minimal" }, body: JSON.stringify(Object.assign({ updated_at: new Date().toISOString() }, patch)) });
+      toast(t(msgKey), "ok");
+      return true;
+    } catch (e) { Object.assign(l, before); toast(sbErrorText(e), "err"); return false; }
+  }
+  async function deleteLead(l) {
+    if (!(await confirmBox(t("deleteLeadQ", { n: l.name }), true))) return;
+    if (!DATA.demo) {
+      try { await SB.req("/rest/v1/bv_leads?id=eq." + encodeURIComponent(l.id), { method: "DELETE", headers: { Prefer: "return=minimal" } }); }
+      catch (e) { toast(sbErrorText(e), "err"); return; }
+    }
+    DATA.leads = DATA.leads.filter(x => x !== l);
+    toast(t("leadDeleted"));
+    renderTab(true); renderRail();
+  }
+  function exportCsv(rows) {
+    const cols = ["created_at", "name", "company", "email", "phone", "service", "budget", "message", "status", "notes", "form", "page", "lang", "referrer", "utm_source", "utm_medium", "utm_campaign"];
+    const esc = v => { let s = v == null ? "" : String(v); if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""') + '"'; };
+    const csv = "﻿" + cols.join(",") + "\r\n" + rows.map(r => cols.map(c => esc(r[c])).join(",")).join("\r\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    const a = h("a", { href: url, download: "brand-vitals-leads-" + isoDay(new Date()) + ".csv" });
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 3000);
+  }
+  function leadMatches(l) {
+    if (DATA.filter !== "all" && l.status !== DATA.filter) return false;
+    if (DATA.service && (l.service || "") !== DATA.service) return false;
+    const q = DATA.q.trim().toLowerCase();
+    if (!q) return true;
+    return [l.name, l.email, l.phone, l.company, l.message, l.service, l.notes].some(v => String(v || "").toLowerCase().includes(q));
+  }
+  function applyLeadFilter() {
+    const P = $("#panel");
+    let n = 0;
+    P.querySelectorAll(".lead").forEach(el => { const ok = leadMatches(el._lead); el.hidden = !ok; if (ok) n++; });
+    const none = P.querySelector(".leads__none");
+    if (none) none.hidden = n > 0;
+    P.querySelectorAll(".chipf").forEach(c => c.classList.toggle("is-on", c.dataset.st === DATA.filter));
+  }
+  function leadRow(l) {
+    const key = "lead|" + l.id;
+    const det = h("details", { class: "lead lead--" + l.status });
+    det._lead = l;
+    det.open = S.open.has(key);
+    det.addEventListener("toggle", () => { if (det.open) S.open.add(key); else S.open.delete(key); });
+    const stop = e => e.stopPropagation();
+    const wa = waDigits(l.phone);
+    const acts = h("span", { class: "lead__acts" },
+      wa ? h("a", { class: "cb cb--wa", href: "https://wa.me/" + wa, target: "_blank", rel: "noopener", title: t("waBtn"), "aria-label": t("waBtn"), onclick: stop }, icon("chat")) : null,
+      l.phone ? h("a", { class: "cb", href: "tel:" + String(l.phone).replace(/[^\d+]/g, ""), title: t("callBtn"), "aria-label": t("callBtn"), onclick: stop }, icon("phone")) : null,
+      l.email ? h("a", { class: "cb", href: "mailto:" + l.email, title: t("mailBtn"), "aria-label": t("mailBtn"), onclick: stop }, icon("mail")) : null);
+    det.append(h("summary", { class: "lead__head" },
+      h("span", { class: "lead__av" }, initials(l.name)),
+      h("span", { class: "lead__who" }, h("b", null, l.name), h("span", { class: "lead__sub" }, [l.company, l.email || l.phone].filter(Boolean).join(" · "))),
+      l.service ? h("span", { class: "chip" }, l.service) : null,
+      h("span", { class: "lead__time", title: fmtDate(l.created_at) }, timeAgo(l.created_at)),
+      statusPill(l.status), acts));
+    const src = l.utm_source ? srcName(l.utm_source) + (l.utm_campaign ? " · " + l.utm_campaign : "") : srcName(l.referrer);
+    const item = (label, val, ltr) => val ? h("div", { class: "kv" }, h("span", { class: "kv__k" }, label), h("span", { class: "kv__v", dir: ltr ? "ltr" : "auto" }, val)) : null;
+    const sel = h("select", { class: "inp sel", "aria-label": t("fStatus") });
+    for (const st of STATUSES) sel.append(h("option", { value: st }, t("st_" + st)));
+    sel.value = l.status;
+    sel.addEventListener("change", async () => { if (await updateLead(l, { status: sel.value }, "statusSaved")) { renderTab(true); renderRail(); } else sel.value = l.status; });
+    const notes = h("textarea", { class: "inp", rows: "3", dir: "auto", placeholder: t("notesPh") });
+    notes.value = l.notes || "";
+    notes.addEventListener("change", () => { if ((l.notes || "") !== notes.value) updateLead(l, { notes: notes.value || null }, "notesSaved"); });
+    det.append(h("div", { class: "lead__body" },
+      h("div", { class: "kvs" },
+        item(t("lEmail"), l.email, true), item(t("lPhone"), l.phone, true), item(t("lCompany"), l.company), item(t("lService"), l.service),
+        item(t("lBudget"), l.budget), item(t("lSource"), src), item(t("lPage"), pageName(l.page || "") + " · " + t(l.form === "consult" ? "formConsult" : "formContact")),
+        item(t("lLang"), langName(l.lang)), item(t("lDate"), fmtDate(l.created_at))),
+      l.message ? h("div", { class: "lead__msg" }, h("span", { class: "kv__k" }, t("lMessage")), h("p", { dir: "auto" }, l.message)) : null,
+      h("div", { class: "lead__edit" },
+        h("label", { class: "fld" }, h("span", { class: "fld__label" }, t("fStatus")), sel),
+        h("label", { class: "fld" }, h("span", { class: "fld__label" }, t("fNotes")), notes)),
+      h("div", { class: "row row--end" },
+        wa ? h("a", { class: "btn btn--sm", href: "https://wa.me/" + wa, target: "_blank", rel: "noopener" }, icon("chat"), h("span", null, t("waBtn"))) : null,
+        l.email ? h("a", { class: "btn btn--sm", href: "mailto:" + l.email }, icon("mail"), h("span", null, t("mailBtn"))) : null,
+        btn(t("deleteLead"), "trash", () => deleteLead(l), "sm danger"))));
+    return det;
+  }
+  function renderLeads() {
+    const P = $("#panel");
+    P.append(tabHead("tabLeads", "leadsIntro"));
+    if (!dataGate(P)) return;
+    if (DATA.errLeads) { P.append(errBox(DATA.errLeads, () => { DATA.errLeads = ""; refreshData("leads"); })); return; }
+    const all = DATA.leads;
+    if (!all) { P.append(loadBox()); if (!DATA.loadingLeads) refreshData("leads"); return; }
+    const count = st => all.filter(l => st === "all" || l.status === st).length;
+    const search = h("input", { class: "inp search__inp", type: "search", placeholder: t("leadsSearch"), "aria-label": t("leadsSearch") });
+    search.value = DATA.q;
+    search.addEventListener("input", () => { DATA.q = search.value; applyLeadFilter(); });
+    const services = [...new Set(all.map(l => l.service).filter(Boolean))].sort();
+    const svc = h("select", { class: "inp sel svc-sel", "aria-label": t("allServices") }, h("option", { value: "" }, t("allServices")), services.map(s => h("option", { value: s }, s)));
+    svc.value = DATA.service;
+    svc.addEventListener("change", () => { DATA.service = svc.value; applyLeadFilter(); });
+    P.append(h("div", { class: "filters filters--leads" },
+      h("label", { class: "search" }, icon("search"), search), svc,
+      btn(t("exportCsv"), "download", () => exportCsv(all.filter(leadMatches)), "sm"),
+      btn(t("refreshData"), "refresh", () => { DATA.leads = null; renderTab(true); }, "sm ghost")));
+    P.append(h("div", { class: "chipfs", role: "group", "aria-label": t("fStatus") }, ["all", ...STATUSES].map(st => h("button", {
+      type: "button", class: "chipf" + (DATA.filter === st ? " is-on" : ""), "data-st": st, onclick: () => { DATA.filter = st; applyLeadFilter(); }
+    }, st === "all" ? null : h("i", { class: "st-dot st-dot--" + st }), h("span", null, st === "all" ? t("all") : t("st_" + st)), h("b", null, String(count(st)))))));
+    if (!all.length) { P.append(h("div", { class: "empty-state" }, icon("users"), h("p", null, t("leadsEmpty")))); return; }
+    P.append(h("div", { class: "leads" }, all.map(leadRow), h("p", { class: "muted leads__none", hidden: true }, t("leadsNoMatch"))));
+    applyLeadFilter();
+  }
+
+  /* ---------- SETTINGS: database card ---------- */
+  function backendCard() {
+    const c = backendCfg();
+    const url = h("input", { class: "inp inp--mono", dir: "ltr", placeholder: "https://xxxx.supabase.co" }); url.value = c.url;
+    const key = h("input", { class: "inp inp--mono", dir: "ltr", placeholder: "sb_publishable_… / eyJ…", spellcheck: "false", autocomplete: "off" }); key.value = c.key;
+    const email = h("input", { class: "inp", type: "email", dir: "ltr", placeholder: "you@brandvitals.io" });
+    email.value = store.get(LS.sbEmail) || (SB.session() || {}).email || "";
+    const status = h("div", { class: "conn" });
+    const setStatus = (kind, msg) => { status.className = "conn conn--" + kind; status.replaceChildren(icon(kind === "ok" ? "check" : kind === "err" ? "warn" : "database"), h("span", null, msg)); };
+    const sess = SB.session();
+    if (!SB.ready()) setStatus("idle", t("sbStatusNone"));
+    else if (!sess) setStatus("idle", t("sbStatusNoLogin"));
+    else setStatus("ok", t("signedAs", { e: sess.email }));
+    const save = () => {
+      const u = url.value.trim().replace(/\/+$/, ""), k = key.value.trim();
+      if (!u && !k) {
+        store.del(LS.sbCfg); SB.signOut(); writeSiteBackend("", ""); resetData();
+        toast(t("sbDisconnected")); renderTab(true); return;
+      }
+      if (!/^https:\/\/[^\s/]+/.test(u)) { toast(t("sbBadUrl"), "err"); return; }
+      if (!k) { toast(t("sbNeedKey"), "err"); return; }
+      if (isSecretKey(k)) { toast(t("sbSecretKey"), { kind: "err", ms: 8000 }); return; }
+      store.set(LS.sbCfg, JSON.stringify({ url: u, key: k }));
+      const wrote = writeSiteBackend(u, k);
+      DATA.demo = false; resetData();
+      toast(wrote ? t("sbSavedPublish") : t("saved"), { kind: "ok", ms: 7000 });
+      renderTab(true);
+    };
+    const sqlBox = h("textarea", { class: "inp inp--mono code code--sql", readonly: true, dir: "ltr", spellcheck: "false", wrap: "off" });
+    const sqlDet = h("details", { class: "sqldet" }, h("summary", null, t("sbShowSql")), sqlBox);
+    sqlDet.addEventListener("toggle", () => { if (sqlDet.open) sqlBox.value = buildSql(email.value || "you@example.com"); });
+    const copySql = async () => {
+      const em = email.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) { toast(t("sbNeedEmail"), "err"); email.focus(); return; }
+      store.set(LS.sbEmail, em);
+      const sql = buildSql(em);
+      sqlBox.value = sql;
+      try { await navigator.clipboard.writeText(sql); toast(t("sbSqlCopied"), { kind: "ok", ms: 7000 }); }
+      catch (e) { sqlDet.open = true; sqlBox.select(); toast(t("sbSqlSelect"), "warn"); }
+    };
+    const test = async () => {
+      setStatus("idle", t("testing"));
+      try {
+        const ok = await SB.req("/rest/v1/rpc/bv_is_admin", { method: "POST", body: "{}" });
+        if (ok === true) setStatus("ok", t("sbOk")); else setStatus("err", t("sbNotAdmin"));
+      } catch (e) { setStatus("err", sbErrorText(e)); }
+    };
+    const noTrack = h("input", { type: "checkbox", onchange: e => store.set(LS.noTrack, e.target.checked ? "1" : "0") });
+    noTrack.checked = store.get(LS.noTrack) === "1";
+    const steps = t("sbSteps").split("|");
+    const authBlock = !SB.ready() ? null : sess
+      ? h("div", { class: "row" }, btn(t("test"), "refresh", test, "sm"), btn(t("signOut"), "lock", () => { SB.signOut(); resetData(); renderTab(true); }, "sm ghost"))
+      : h("div", { class: "subcard" }, h("span", { class: "subhead" }, t("sbLoginTitle")), signInForm(() => renderTab(true)));
+    const det = h("details", { class: "card card--det", id: "sb-card" });
+    det.open = S.open.has("sb-card") || !SB.ready();
+    det.addEventListener("toggle", () => { if (det.open) S.open.add("sb-card"); else S.open.delete("sb-card"); });
+    det.append(h("summary", { class: "card__title" }, icon("database"), h("span", null, t("sbTitle")), h("span", { class: "card__chev" }, icon("chev"))),
+      h("div", { class: "card__body" },
+        status,
+        h("ol", { class: "steps" }, steps.map(s => h("li", null, s))),
+        h("div", { class: "row" }, h("a", { class: "btn btn--sm", href: "https://supabase.com/dashboard", target: "_blank", rel: "noopener" }, icon("external"), h("span", null, t("sbOpen")))),
+        h("label", { class: "fld" }, h("span", { class: "fld__label" }, t("sbUrl")), url),
+        h("label", { class: "fld" }, h("span", { class: "fld__label" }, t("sbKey")), key),
+        h("p", { class: "note" }, icon("key"), h("span", null, t("sbKeyNote"))),
+        h("div", { class: "row" }, btn(t("sbSave"), "check", save, "sm primary")),
+        h("div", { class: "divider" }, "SQL"),
+        h("label", { class: "fld" }, h("span", { class: "fld__label" }, t("sbAdmin")), email),
+        h("div", { class: "row" }, btn(t("sbCopySql"), "copy", copySql, "sm")),
+        sqlDet,
+        authBlock ? h("div", { class: "divider" }, t("signIn")) : null,
+        authBlock,
+        h("label", { class: "chk" }, noTrack, h("span", null, t("noTrack")))));
+    return det;
+  }
+
+  /* ======================================================================
      SHELL
      ====================================================================== */
-  const TABS = [["pages", "pages", "tabPages"], ["design", "design", "tabDesign"], ["global", "global", "tabGlobal"], ["images", "images", "tabImages"], ["files", "files", "tabFiles"], ["settings", "settings", "tabSettings"]];
+  const TABS = [["overview", "overview", "tabOverview"], ["leads", "users", "tabLeads"], ["pages", "pages", "tabPages"], ["design", "design", "tabDesign"], ["global", "global", "tabGlobal"], ["images", "images", "tabImages"], ["files", "files", "tabFiles"], ["settings", "settings", "tabSettings"]];
   function renderShell() {
     const app = $("#app");
     app.replaceChildren();
@@ -2505,7 +3394,9 @@
   function renderRail() {
     const rail = $("#rail");
     if (!rail) return;
-    rail.replaceChildren(...TABS.map(([id, ic, lab]) => h("button", { type: "button", class: "rail__btn" + (S.tab === id ? " is-active" : ""), "aria-current": S.tab === id ? "page" : null, onclick: () => setTab(id) }, icon(ic), h("span", null, t(lab)))));
+    const fresh = (DATA.leads || []).filter(l => l.status === "new").length;
+    rail.replaceChildren(...TABS.map(([id, ic, lab]) => h("button", { type: "button", class: "rail__btn" + (S.tab === id ? " is-active" : ""), "aria-current": S.tab === id ? "page" : null, onclick: () => setTab(id) },
+      icon(ic), h("span", null, t(lab)), id === "leads" && fresh ? h("b", { class: "rail__badge", "aria-label": fresh + " " + t("st_new") }, fresh > 99 ? "99+" : String(fresh)) : null)));
   }
   function renderPvBar() {
     const bar = $("#pvBar");
@@ -2573,10 +3464,13 @@
     P.replaceChildren();
     P.classList.remove("is-searching");
     S.fieldByKey.clear();
+    const wide = S.tab === "overview" || S.tab === "leads";
+    $("#app").classList.toggle("is-wide", wide);
     if (!S.loaded) return;
-    ({ pages: renderPages, design: renderDesign, global: renderGlobal, images: renderImages, files: renderFiles, settings: renderSettings })[S.tab]();
+    ({ overview: renderOverview, leads: renderLeads, pages: renderPages, design: renderDesign, global: renderGlobal, images: renderImages, files: renderFiles, settings: renderSettings })[S.tab]();
     P.parentElement.scrollTop = keep ? sc : 0;
     renderRail();
+    if (!wide && PV.stale && previewVisible()) schedulePreview(0);
   }
   function setTab(tab) {
     if (S.tab === tab) return;
@@ -2662,9 +3556,11 @@
     renderShell();
     showLoading(true);
     try { await loadAll(); } catch (e) { showLoading(false, ghErrorText(e)); return; }
+    if (store.get(LS.noTrack) == null) store.set(LS.noTrack, "1");
     renderShell();
     renderTab(); refreshDirty(); schedulePreview(0);
     checkDraft();
+    if (SB.ready() && SB.session() && S.tab !== "leads" && S.tab !== "overview") loadLeads();
     if (S.ghError) toast(t("ghFallback") + " " + S.ghError, { kind: "warn", ms: 9000 });
   }
   function applyUiLang() {
@@ -2711,6 +3607,13 @@
     if (dirtyList().length) { e.preventDefault(); e.returnValue = ""; }
   });
   window.addEventListener("resize", debounce(() => { if (PV.stale && previewVisible()) renderPreview(); layoutPreview(); }, 200));
+
+  // Keep the numbers fresh while the dashboard is open.
+  setInterval(() => {
+    if (!S.loaded || DATA.demo || !SB.ready() || !SB.session() || document.visibilityState !== "visible") return;
+    if (S.tab === "overview") refreshData("stats");
+    else if (S.tab !== "leads") loadLeads();
+  }, 60000);
 
   async function boot() {
     applyUiLang();
