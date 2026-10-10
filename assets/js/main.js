@@ -859,7 +859,7 @@
           cur = i;
           steps.forEach((st, j) => { st.hidden = j !== i; });
           nav.forEach((li, j) => { li.classList.toggle("is-on", j === i); li.classList.toggle("is-done", j < i); });
-          if (bar) bar.style.width = ((i + 1) / steps.length * 100) + "%";
+          if (bar) bar.style.transform = "scaleX(" + ((i + 1) / steps.length) + ")";
           back.hidden = i === 0;
           next.hidden = i === steps.length - 1;
           send.hidden = i !== steps.length - 1;

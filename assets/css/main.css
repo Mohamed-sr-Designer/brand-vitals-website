@@ -1185,7 +1185,8 @@ body.modal-open { overflow: hidden; }
 .steps-nav li.is-on b { color: var(--accent-ink); background: var(--accent); border-color: var(--accent); }
 .steps-nav li.is-done b { color: var(--accent); border-color: var(--accent); }
 .steps-bar { height: 3px; border-radius: 3px; background: var(--line); margin-bottom: clamp(1.5rem, 3vw, 2.2rem); overflow: hidden; }
-.steps-bar i { display: block; height: 100%; width: 25%; background: var(--accent); transition: width 0.45s var(--ease-out); }
+.steps-bar i { display: block; height: 100%; width: 100%; background: var(--accent); transform: scaleX(0.25); transform-origin: left; transition: transform 0.45s var(--ease-out); }
+[dir="rtl"] .steps-bar i { transform-origin: right; }
 .step { border: 0; margin: 0; padding: 0; min-width: 0; }
 .step legend { margin-bottom: 1.2rem; font-family: var(--font-display); font-size: clamp(1.25rem, 1rem + 0.8vw, 1.6rem); font-weight: 600; }
 .team-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
