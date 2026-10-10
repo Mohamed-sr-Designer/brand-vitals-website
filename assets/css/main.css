@@ -1078,7 +1078,6 @@ body.modal-open { overflow: hidden; }
   padding: clamp(1.5rem, 2.5vw, 2rem); border: 1px solid var(--line); border-radius: var(--r-lg); background: var(--surface);
   transition: border-color 0.35s, transform 0.45s var(--ease-out);
 }
-.eco-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: var(--eco); }
 .eco-card::after { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(90% 60% at 50% 0%, color-mix(in srgb, var(--eco) 12%, transparent), transparent 70%); }
 .eco-card:hover { border-color: color-mix(in srgb, var(--eco) 45%, transparent); transform: translateY(-4px); }
 .eco-card img { width: 52px; height: 52px; border-radius: 14px; }

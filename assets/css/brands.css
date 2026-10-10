@@ -289,8 +289,7 @@
 .loop__step--bv b { color: #3DD9FF; }
 [data-theme="light"] .loop__step--studio b { color: #B04A0C; }
 [data-theme="light"] .loop__step--bv b { color: #007299; }
-.loop__note { margin-top: 1.4rem; padding: 1.1rem 1.3rem; border-inline-start: 3px solid var(--accent-2); background: var(--surface); border-radius: 0 var(--r-md) var(--r-md) 0; color: var(--text-2); }
-[dir="rtl"] .loop__note { border-radius: var(--r-md) 0 0 var(--r-md); }
+.loop__note { margin-top: 1.4rem; padding: 1.1rem 1.3rem; border: 1px dashed var(--line-strong); background: var(--surface); border-radius: var(--r-md); color: var(--text-2); }
 .loop__note b { color: var(--text); }
 
 /* ==========================================================================
