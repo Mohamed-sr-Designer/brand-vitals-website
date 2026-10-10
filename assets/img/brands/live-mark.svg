@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14181D"/><stop offset="1" stop-color="#07090B"/></linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.55" r="0.5"><stop offset="0" stop-color="#B266FF" stop-opacity="0.2"/><stop offset="1" stop-color="#B266FF" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#tile)"/>
+  <rect width="64" height="64" rx="14" fill="url(#glow)"/>
+  <g transform="translate(9 9) scale(0.71875)"><defs><linearGradient id="conelivemark" x1="12" y1="10" x2="44" y2="54" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#B266FF" stop-opacity="1"/><stop offset="1" stop-color="#B266FF" stop-opacity="0.3"/></linearGradient></defs><path d="M12 11 26 55 60 41Z" fill="url(#conelivemark)"/><ellipse cx="43" cy="48.5" rx="19" ry="6.5" transform="rotate(-22 43 48.5)" fill="#B266FF" opacity="0.85"/><circle cx="12" cy="11" r="6" fill="#FFD27A"/></g>
+</svg>

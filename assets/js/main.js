@@ -15,7 +15,7 @@
   const Theme = {
     init() {
       // Dark is the brand theme; light is opt-in via the toggle.
-      this.set(localStorage.getItem("oso-theme") || "dark", false);
+      this.set(localStorage.getItem("oso-theme") || doc.dataset.defaultTheme || "dark", false);
       document.querySelectorAll("[data-theme-toggle]").forEach(btn =>
         btn.addEventListener("click", () => this.set(doc.dataset.theme === "dark" ? "light" : "dark", true))
       );
@@ -432,7 +432,9 @@
         name: get("name"), email: get("email"), phone: get("phone"), company: get("company"),
         service: Forms.label(form, "interest"), budget: Forms.label(form, "budget"),
         message: extra.length ? extra.join("\n") + (msg ? "\n\n" + msg : "") : msg,
-        website: get("website"), form: form.dataset.form || (form.closest("#consultModal") ? "consult" : "contact")
+        website: get("website"), form: form.dataset.form || (form.closest("#consultModal") ? "consult" : "contact"),
+        // Sub-brand forms open WhatsApp with their own first line ("Hi Vitals Studio, …").
+        intro: (I18n.lang === "ar" ? form.dataset.waAr : form.dataset.waEn) || ""
       };
     },
     waNumber() {
@@ -443,7 +445,7 @@
     waLink(d) {
       const ar = I18n.lang === "ar";
       const rows = [
-        ar ? "طلب جديد من الموقع" : "New inquiry from the website",
+        d.intro || (ar ? "طلب جديد من الموقع" : "New inquiry from the website"),
         (ar ? "الاسم: " : "Name: ") + d.name,
         d.company && (ar ? "الشركة: " : "Company: ") + d.company,
         d.email && (ar ? "البريد: " : "Email: ") + d.email,
@@ -638,6 +640,176 @@
   /* ------------------------------------------------------------------
      WHATSAPP — floating chat button, always in view while scrolling
   ------------------------------------------------------------------ */
+  /* ------------------------------------------------------------------
+     ECOSYSTEM — nav dropdown (mouse, touch, keyboard) + drawer accordion
+  ------------------------------------------------------------------ */
+  const Ecosystem = {
+    init() {
+      const here = (location.pathname.split("/").pop() || "index.html").toLowerCase();
+      const subPage = /^(studio|web|live|hq)(\.html)?$/.test(here);
+      document.querySelectorAll(".eco-item").forEach(a => {
+        const href = (a.getAttribute("href") || "").toLowerCase();
+        if (href === here || href === here + ".html") a.setAttribute("aria-current", "page");
+      });
+      document.querySelectorAll("[data-eco]").forEach(item => {
+        const btn = item.querySelector(".nav__trigger");
+        const menu = item.querySelector(".eco-menu");
+        if (!btn || !menu) return;
+        if (subPage) btn.classList.add("is-active");
+        const links = () => [...menu.querySelectorAll(".eco-item")];
+        const isOpen = () => item.classList.contains("is-open");
+        const set = open => { item.classList.toggle("is-open", open); btn.setAttribute("aria-expanded", String(open)); };
+        const focusAt = i => { const l = links(); if (l.length) l[(i + l.length) % l.length].focus(); };
+        btn.addEventListener("click", () => set(!isOpen()));
+        btn.addEventListener("keydown", e => {
+          if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            e.preventDefault();
+            set(true);
+            focusAt(e.key === "ArrowDown" ? 0 : -1);
+          } else if (e.key === "Escape" && isOpen()) set(false);
+        });
+        menu.addEventListener("keydown", e => {
+          const i = links().indexOf(document.activeElement);
+          if (e.key === "ArrowDown") { e.preventDefault(); focusAt(i + 1); }
+          else if (e.key === "ArrowUp") { e.preventDefault(); focusAt(i - 1); }
+          else if (e.key === "Home") { e.preventDefault(); focusAt(0); }
+          else if (e.key === "End") { e.preventDefault(); focusAt(-1); }
+          else if (e.key === "Escape") { e.preventDefault(); set(false); btn.focus(); }
+        });
+        item.addEventListener("focusout", e => { if (!item.contains(e.relatedTarget)) set(false); });
+        document.addEventListener("click", e => { if (isOpen() && !item.contains(e.target)) set(false); });
+        if (finePointer) {
+          let timer;
+          item.addEventListener("mouseenter", () => { clearTimeout(timer); set(true); });
+          item.addEventListener("mouseleave", () => { timer = setTimeout(() => set(false), 160); });
+        }
+      });
+      document.querySelectorAll(".drawer__toggle").forEach(tg => {
+        const sub = document.getElementById(tg.getAttribute("aria-controls"));
+        if (!sub) return;
+        const set = open => { tg.setAttribute("aria-expanded", String(open)); sub.hidden = !open; };
+        tg.addEventListener("click", () => set(tg.getAttribute("aria-expanded") !== "true"));
+        if (subPage) set(true);
+      });
+    }
+  };
+
+  /* ------------------------------------------------------------------
+     WHATSAPP CTAS — [data-wa-en] links open a chat with a prefilled line
+     in the visitor's language (e.g. "Hi Vitals Web, …")
+  ------------------------------------------------------------------ */
+  const WaLinks = {
+    init() {
+      document.querySelectorAll("[data-wa-en]").forEach(a => {
+        const go = () => {
+          const text = I18n.lang === "ar" ? (a.dataset.waAr || a.dataset.waEn) : a.dataset.waEn;
+          a.href = "https://wa.me/" + Forms.waNumber() + "?text=" + encodeURIComponent(text);
+        };
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.addEventListener("click", go);
+        go();
+      });
+    }
+  };
+
+  /* ------------------------------------------------------------------
+     VITALS WEB PACKAGES — the single source for the package cards on
+     web.html. Edit names, timelines, revision rounds and inclusions here.
+  ------------------------------------------------------------------ */
+  const WEB_PACKAGES = [
+    {
+      id: "launch",
+      name: { en: "Launch", ar: "لانش" },
+      kind: { en: "Single landing page", ar: "صفحة هبوط واحدة" },
+      for: { en: "For a product, campaign or service that needs to go live now.", ar: "لمنتج أو حملة أو خدمة محتاجة تنزل دلوقتي." },
+      weeks: { en: "2 weeks", ar: "أسبوعين" },
+      revisions: { en: "2 revision rounds", ar: "جولتين تعديل" },
+      includes: [
+        ["One conversion-focused landing page", "صفحة هبوط واحدة مبنية على التحويل"],
+        ["Copy structure and section design", "هيكلة الكلام وتصميم الأقسام"],
+        ["Lead form connected to WhatsApp and email", "فورم عملاء مربوط بواتساب والإيميل"],
+        ["Analytics and conversion tracking", "تحليلات وتتبع للتحويلات"],
+        ["Launch and post-launch support", "إطلاق ودعم بعد الإطلاق"]
+      ]
+    },
+    {
+      id: "business",
+      name: { en: "Business", ar: "بيزنس" },
+      kind: { en: "Multi-page company site", ar: "موقع شركة متعدد الصفحات" },
+      for: { en: "For companies that need a credible home for their brand and services.", ar: "للشركات اللي محتاجة بيت رقمي يليق بالبراند والخدمات." },
+      weeks: { en: "4 weeks", ar: "4 أسابيع" },
+      revisions: { en: "3 revision rounds", ar: "3 جولات تعديل" },
+      featured: true,
+      includes: [
+        ["Core pages: home, about, services, work, contact", "الصفحات الأساسية: الرئيسية، من نحن، الخدمات، الأعمال، التواصل"],
+        ["Page templates you can reuse and extend", "قوالب صفحات تقدر تكررها وتزود عليها"],
+        ["Content editing without a developer", "تعديل المحتوى من غير مطوّر"],
+        ["SEO foundations on every page", "أساسيات السيو في كل صفحة"],
+        ["Forms, WhatsApp and tracking wired in", "فورمز وواتساب وتتبع متركبين"]
+      ]
+    },
+    {
+      id: "commerce",
+      name: { en: "Commerce", ar: "كوميرس" },
+      kind: { en: "Online store", ar: "متجر إلكتروني" },
+      for: { en: "For brands ready to sell online with local payments and shipping.", ar: "للبراندز الجاهزة تبيع أونلاين بدفع وشحن محلي." },
+      weeks: { en: "6 weeks", ar: "6 أسابيع" },
+      revisions: { en: "3 revision rounds", ar: "3 جولات تعديل" },
+      includes: [
+        ["Catalog, cart and checkout", "كتالوج وسلة ودفع"],
+        ["Local payment gateways and shipping options", "بوابات دفع محلية وخيارات شحن"],
+        ["Product and category pages in Arabic and English", "صفحات منتجات وأقسام بالعربي والإنجليزي"],
+        ["E-commerce event tracking for ads", "تتبع أحداث المتجر للإعلانات"],
+        ["Training to manage products and orders", "تدريب على إدارة المنتجات والطلبات"]
+      ]
+    }
+  ];
+  const WebPackages = {
+    init() {
+      const host = document.querySelector("[data-web-packages]");
+      if (!host) return;
+      const esc = v => String(v).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+      const bi = (o, cls, tag) => "<" + tag + ' class="' + cls + '" data-en="' + esc(o.en) + '" data-ar="' + esc(o.ar) + '">' + esc(o.en) + "</" + tag + ">";
+      host.innerHTML = WEB_PACKAGES.map((p, i) =>
+        '<article class="pkg' + (p.featured ? " pkg--featured" : "") + '" data-reveal style="--rd:' + (i * 0.08) + 's">' +
+          '<div class="pkg__top"><span class="pkg__code" dir="ltr">&lt;' + esc(p.id) + "/&gt;</span>" +
+          (p.featured ? '<span class="pkg__flag" data-en="Most chosen" data-ar="الأكثر طلبًا">Most chosen</span>' : "") + "</div>" +
+          bi(p.name, "pkg__name", "h3") + bi(p.kind, "pkg__kind", "span") + bi(p.for, "pkg__for", "p") +
+          '<dl class="pkg__facts"><div><dt data-en="Delivery" data-ar="التسليم">Delivery</dt>' + bi(p.weeks, "pkg__v", "dd") + "</div>" +
+          '<div><dt data-en="Revisions" data-ar="التعديلات">Revisions</dt>' + bi(p.revisions, "pkg__v", "dd") + "</div></dl>" +
+          '<ul class="pkg__list">' + p.includes.map(([en, ar]) => '<li data-en="' + esc(en) + '" data-ar="' + esc(ar) + '">' + esc(en) + "</li>").join("") + "</ul>" +
+          '<div class="pkg__price"><span data-en="Tailored quote" data-ar="عرض سعر مخصص">Tailored quote</span></div>' +
+          '<a class="btn ' + (p.featured ? "btn--primary" : "btn--ghost") + ' pkg__cta" href="#brief" data-package="' + esc(p.id) + '">' +
+            '<span data-en="Choose ' + esc(p.name.en) + '" data-ar="اختار ' + esc(p.name.ar) + '">Choose ' + esc(p.name.en) + "</span></a>" +
+        "</article>").join("");
+      // "Choose" preselects that package in the brief form.
+      host.addEventListener("click", e => {
+        const a = e.target.closest("[data-package]");
+        const sel = document.querySelector('#brief select[name="interest"]');
+        if (a && sel) sel.value = a.dataset.package;
+      });
+    }
+  };
+
+  /* ------------------------------------------------------------------
+     TIMECODE — Vitals Studio viewfinder counter (25 fps); still for reduced motion
+  ------------------------------------------------------------------ */
+  const Timecode = {
+    init() {
+      if (reduceMotion) return;
+      document.querySelectorAll("[data-timecode]").forEach(el => {
+        let f = 12 * 25 + 4;
+        const pad = n => String(n).padStart(2, "0");
+        setInterval(() => {
+          f++;
+          const fr = f % 25, s = Math.floor(f / 25) % 60, m = Math.floor(f / 1500) % 60, h = Math.floor(f / 90000);
+          el.textContent = pad(h) + ":" + pad(m) + ":" + pad(s) + ":" + pad(fr);
+        }, 40);
+      });
+    }
+  };
+
   const WhatsAppFab = {
     init() {
       const a = document.createElement("a");
@@ -791,8 +963,12 @@
   const boot = () => {
     ConsultModal.inject();
     WhatsAppFab.init();
+    WebPackages.init();
     Theme.init();
     I18n.init();
+    Ecosystem.init();
+    WaLinks.init();
+    Timecode.init();
     MouseParallax.init();
     Loader.init();
     Nav.init();
