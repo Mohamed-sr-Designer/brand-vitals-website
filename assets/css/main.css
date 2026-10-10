@@ -1157,3 +1157,20 @@ body.modal-open { overflow: hidden; }
   .nav, .drawer, .loader, .to-top, .wa-fab, .progress, .noise::after, .modal-backdrop { display: none !important; }
   body { background: #fff; color: #000; }
 }
+
+/* ---------- Home lead form ---------- */
+.lead-sec__grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+.lead-sec__copy { display: grid; gap: 1.2rem; align-content: start; position: sticky; top: 110px; }
+.lead-sec__copy h2 { font-size: var(--fs-h2); }
+.lead-steps { list-style: none; display: grid; gap: 0.2rem; margin: 0.6rem 0 0; padding: 0; border-top: 1px solid var(--line); }
+.lead-steps li { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); gap: 0.6rem; align-items: baseline; padding: 0.95rem 0; border-bottom: 1px solid var(--line); color: var(--text-2); }
+.lead-steps b { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500; color: var(--accent); }
+.lead-direct { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.4rem; }
+.lead-direct a { display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.6rem 0.95rem; border: 1px solid var(--line-strong); border-radius: 999px; font-size: 0.88rem; color: var(--text); transition: border-color 0.3s, color 0.3s; }
+.lead-direct a:hover { border-color: var(--accent); color: var(--accent); }
+.lead-direct svg { width: 17px; height: 17px; }
+.lead-sec__form { padding: clamp(1.6rem, 3.5vw, 2.6rem); }
+@media (max-width: 960px) {
+  .lead-sec__grid { grid-template-columns: minmax(0, 1fr); }
+  .lead-sec__copy { position: static; }
+}

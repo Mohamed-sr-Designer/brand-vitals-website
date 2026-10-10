@@ -11,7 +11,20 @@
   /* ======================================================================
      CONSTANTS
      ====================================================================== */
-  const CORE_PAGES = [
+  // Each brand has its own dashboard: dashboard.html?brand=studio etc.
+  const BRANDS = {
+    bv: { name: "Brand Vitals", home: "index.html", logo: "assets/img/logo-light.svg", forms: ["contact", "consult", "lead"] },
+    studio: { name: "Vitals Studio", home: "studio.html", logo: "assets/img/brands/studio-light.svg", forms: ["studio"] },
+    web: { name: "Vitals Web", home: "web.html", logo: "assets/img/brands/web-light.svg", forms: ["web"] },
+    live: { name: "Vitals Live", home: "live.html", logo: "assets/img/brands/live-light.svg", forms: ["live"] },
+    hq: { name: "Vitals HQ", home: "hq.html", logo: "assets/img/brands/hq-light.svg", forms: ["hq"] }
+  };
+  const BRAND = (() => { try { const b = new URLSearchParams(location.search).get("brand"); return BRANDS[b] ? b : "bv"; } catch (e) { return "bv"; } })();
+  const B = BRANDS[BRAND];
+  const HOME = B.home;
+  const SUB_PAGES = ["studio.html", "web.html", "live.html", "hq.html"];
+  const pageBrand = p => (p && p.brand) || (SUB_PAGES.includes(p && p.path) ? p.path.replace(".html", "") : "bv");
+  const ALL_CORE_PAGES = [
     { path: "index.html", ar: "الرئيسية", en: "Home" },
     { path: "solutions.html", ar: "الخدمات", en: "Services" },
     { path: "work.html", ar: "أعمالنا", en: "Work" },
@@ -27,6 +40,7 @@
     { path: "privacy.html", ar: "الخصوصية والشروط", en: "Privacy & terms" },
     { path: "404.html", ar: "صفحة الخطأ 404", en: "404 page" }
   ];
+  const CORE_PAGES = ALL_CORE_PAGES.filter(p => pageBrand(p) === BRAND);
   const CSS_PATH = "assets/css/main.css";
   const JS_PATH = "assets/js/main.js";
   const CONFIG_PATH = "cms/config.json";
@@ -36,7 +50,7 @@
   const SALT = "bv-cms|";
   const DEFAULT_REPO = { owner: "Mohamed-sr-Designer", repo: "brand-vitals-website", branch: "main" };
   const LS = {
-    token: "bv-cms-token", repo: "bv-cms-repo", lang: "bv-cms-lang", draft: "bv-cms-draft-v1",
+    token: "bv-cms-token", repo: "bv-cms-repo", lang: "bv-cms-lang", draft: "bv-cms-draft-v1" + (BRAND === "bv" ? "" : "-" + BRAND),
     session: "bv-cms-session", remember: "bv-cms-remember", preview: "bv-cms-preview",
     sbCfg: "bv-cms-sb", sbAuth: "bv-cms-sb-auth", sbEmail: "bv-cms-sb-email", noTrack: "bv-no-track"
   };
@@ -146,7 +160,7 @@
     wrongCode: ["الكود غير صحيح، جرّب تاني", "Wrong code, try again"],
     cooldown: ["محاولات كتير، استنى ثواني وجرّب تاني", "Too many attempts, wait a few seconds"],
     remember: ["افتكرني على الجهاز ده", "Remember this device"],
-    loginNote: ["لوحة تحكم موقع Brand Vitals", "Brand Vitals website control panel"],
+    loginNote: ["لوحة تحكم موقع " + B.name, B.name + " website control panel"],
     loading: ["بيحمّل ملفات الموقع…", "Loading site files…"],
     errLoad: ["مقدرناش نحمّل ملفات الموقع.", "Could not load the site files."],
     retry: ["حاول تاني", "Try again"],
@@ -527,6 +541,7 @@
     lMessage: ["الرسالة", "Message"],
     formContact: ["فورم التواصل", "Contact form"],
     formConsult: ["نافذة الاستشارة", "Consultation popup"],
+    formLead: ["فورم الهوم", "Home lead form"],
     formStudio: ["فورم Vitals Studio", "Vitals Studio form"],
     formWeb: ["فورم Vitals Web", "Vitals Web form"],
     formLive: ["فورم Vitals Live", "Vitals Live form"],
@@ -586,7 +601,7 @@
     orig: {}, docs: {}, base: {}, text: {},
     uploads: {}, cache: {},
     deleted: new Set(),
-    tab: "overview", page: "index.html", file: "index.html",
+    tab: "overview", page: HOME, file: HOME,
     open: new Set(), seq: 0, keys: new WeakMap(), fieldByKey: new Map(),
     undo: [], lastUndo: null,
     preview: Object.assign({ device: "desktop", lang: "en", theme: "dark", select: true }, safeJSON(store.get(LS.preview)) || {}),
@@ -781,7 +796,14 @@
   function setCfg(o) { S.text[CONFIG_PATH] = JSON.stringify(o, null, 2) + "\n"; }
   function syncPages() {
     const c = cfg();
-    S.pages = Array.isArray(c.pages) && c.pages.length ? c.pages.filter(p => p && p.path) : CORE_PAGES.slice();
+    const list = Array.isArray(c.pages) && c.pages.length ? c.pages.filter(p => p && p.path) : ALL_CORE_PAGES;
+    S.pages = list.filter(p => pageBrand(p) === BRAND);
+    for (const p of CORE_PAGES) if (!S.pages.some(q => q.path === p.path)) S.pages.push(p);
+  }
+  // Pages of the other brands, kept untouched when this dashboard saves the config.
+  function otherPages(c) {
+    const list = Array.isArray(c.pages) && c.pages.length ? c.pages.filter(p => p && p.path) : ALL_CORE_PAGES;
+    return list.filter(p => pageBrand(p) !== BRAND);
   }
   const htmlPaths = () => Object.keys(S.docs);
   const pageName = p => { const x = S.pages.find(q => q.path === p); return x ? (x[S.ui] || x.en || p) : p; };
@@ -812,9 +834,9 @@
         if (x != null) S.text[p] = x;
       }
     }
-    if (S.text[CSS_PATH] == null || !S.docs["index.html"]) throw new Error(t("errLoad"));
+    if (S.text[CSS_PATH] == null || !S.docs[HOME]) throw new Error(t("errLoad"));
     S.pages = S.pages.filter(p => S.docs[p.path]);
-    if (S.page !== CONSULT && !S.docs[S.page]) S.page = "index.html";
+    if (S.page !== CONSULT && !S.docs[S.page]) S.page = HOME;
     const c = cfg();
     if (typeof c.codeHash === "string" && /^[0-9a-f]{64}$/.test(c.codeHash)) S.codeHash = c.codeHash;
     S.loaded = true;
@@ -923,7 +945,7 @@
     for (const [p, x] of Object.entries(s.files)) setText(p, x);
     S.deleted = new Set(s.deleted);
     syncPages();
-    if (S.page !== CONSULT && !S.docs[S.page]) S.page = "index.html";
+    if (S.page !== CONSULT && !S.docs[S.page]) S.page = HOME;
     S.lastUndo = null;
     renderTab(true); schedulePreview(0); changed(); refreshUndo();
     toast(t("undone"));
@@ -1490,7 +1512,7 @@
     return wrap;
   }
   function canonicalOrigin() {
-    const l = S.docs["index.html"] && S.docs["index.html"].querySelector('link[rel="canonical"]');
+    const l = S.docs[HOME] && S.docs[HOME].querySelector('link[rel="canonical"]');
     try { return new URL(l.getAttribute("href")).origin; } catch (e) { return "https://brandvitals.io"; }
   }
   function seoCard(page) {
@@ -1560,13 +1582,13 @@
     const dirty = new Set(dirtyList());
     const sel = h("select", { class: "inp sel pbar__sel", "aria-label": t("tabPages") });
     for (const p of S.pages) sel.append(h("option", { value: p.path }, (dirty.has(p.path) ? "● " : "") + (p[S.ui] || p.en) + "  ·  " + p.path));
-    sel.append(h("option", { value: CONSULT }, (dirty.has(JS_PATH) ? "● " : "") + t("consultTitle")));
+    if (BRAND === "bv") sel.append(h("option", { value: CONSULT }, (dirty.has(JS_PATH) ? "● " : "") + t("consultTitle")));
     sel.value = S.page;
     sel.addEventListener("change", () => gotoPage(sel.value));
     const search = h("input", { class: "inp search__inp", type: "search", placeholder: t("searchPh"), "aria-label": t("searchPh") });
     search.value = S.search;
     search.addEventListener("input", debounce(() => { S.search = search.value; applySearch(S.search); }, 140));
-    const canDel = S.page !== CONSULT && S.page !== "index.html" && S.page !== "404.html";
+    const canDel = S.page !== CONSULT && S.page !== HOME && S.page !== "404.html";
     const tools = h("div", { class: "pbar__tools" },
       ctrlBtn("file", t("newPage"), newPageModal),
       S.page !== CONSULT ? ctrlBtn("code", t("pageCode"), () => { S.file = S.page; setTab("files"); }) : null,
@@ -1626,7 +1648,7 @@
     const pageSel = h("select", { class: "inp sel" });
     for (const p of S.pages) if (sections(S.docs[p.path]).some(s => s.tagName !== "MAIN")) pageSel.append(h("option", { value: p.path }, p[S.ui] || p.en));
     pageSel.value = S.page;
-    if (!pageSel.value) pageSel.value = "index.html";
+    if (!pageSel.value) pageSel.value = HOME;
     const list = h("div", { class: "pick" });
     let m;
     const fill = () => {
@@ -1659,7 +1681,7 @@
   function newPageModal() {
     const tpl = h("select", { class: "inp sel" });
     for (const p of S.pages) tpl.append(h("option", { value: p.path }, (p[S.ui] || p.en) + "  ·  " + p.path));
-    tpl.value = S.page === CONSULT ? "index.html" : S.page;
+    tpl.value = S.page === CONSULT ? HOME : S.page;
     const en = h("input", { class: "inp", dir: "ltr" });
     const ar = h("input", { class: "inp", dir: "rtl" });
     const file = h("input", { class: "inp inp--mono", dir: "ltr", placeholder: "new-page.html" });
@@ -1688,15 +1710,15 @@
     snapshot([file, CONFIG_PATH, "sitemap.xml"], "page");
     const d = parseHTML(currentText(from));
     const origin = canonicalOrigin();
-    d.documentElement.setAttribute("data-title-en", en + " | Brand Vitals");
-    d.documentElement.setAttribute("data-title-ar", ar + " | براند فايتلز");
-    d.title = en + " | Brand Vitals";
+    d.documentElement.setAttribute("data-title-en", en + " | " + B.name);
+    d.documentElement.setAttribute("data-title-ar", ar + " | " + (BRAND === "bv" ? "براند فايتلز" : B.name));
+    d.title = en + " | " + B.name;
     const can = d.head.querySelector('link[rel="canonical"]'); if (can) can.setAttribute("href", origin + "/" + file);
     const ogu = d.head.querySelector('meta[property="og:url"]'); if (ogu) ogu.setAttribute("content", origin + "/" + file);
     S.docs[file] = d; S.base[file] = ""; S.orig[file] = S.orig[file] == null ? null : S.orig[file];
     S.deleted.delete(file);
     const c = cfg();
-    c.pages = S.pages.concat([{ path: file, ar, en }]);
+    c.pages = otherPages(c).concat(S.pages, [Object.assign({ path: file, ar, en }, BRAND === "bv" ? {} : { brand: BRAND })]);
     if (!c.codeHash) c.codeHash = S.codeHash;
     setCfg(c); syncPages();
     const sm = S.text["sitemap.xml"];
@@ -1711,12 +1733,12 @@
     if (S.orig[p] != null) S.deleted.add(p);
     delete S.docs[p];
     const c = cfg();
-    c.pages = S.pages.filter(x => x.path !== p);
+    c.pages = otherPages(c).concat(S.pages.filter(x => x.path !== p));
     if (!c.codeHash) c.codeHash = S.codeHash;
     setCfg(c); syncPages();
     const sm = S.text["sitemap.xml"];
     if (sm) S.text["sitemap.xml"] = sm.split("\n").filter(l => !l.includes("/" + p + "<")).join("\n");
-    S.page = "index.html"; S.lastUndo = null;
+    S.page = HOME; S.lastUndo = null;
     renderTab(); schedulePreview(0); changed();
     toast(t("pageDeleted"), { undo: true });
   }
@@ -1948,7 +1970,7 @@
     return total;
   }
   function detectContacts() {
-    const d = S.docs["index.html"] || S.docs[htmlPaths()[0]];
+    const d = S.docs[HOME] || S.docs[htmlPaths()[0]];
     const rows = [];
     const wa = d.querySelector('a[href*="wa.me/"]');
     if (wa) {
@@ -1994,7 +2016,7 @@
         h("div", { class: "thumb thumb--logo" }, h("div", { class: "thumb__box" + (/light/.test(shown) ? " is-dark" : " is-light") }, thumb),
           h("div", { class: "thumb__side" }, h("code", { class: "fld__hint" }, list.join(" · ")), uploadBtn(async f => { const u = await addUpload(f); if (u) { const n = replaceAsset(list, u.path, u); toast(t("replaced", { n }), { kind: "ok", undo: true }); } }, "image/*", t("replaceImg")))));
     };
-    const idx = S.docs["index.html"];
+    const idx = S.docs[HOME];
     const srcOf = (sel, def) => { const x = idx.querySelector(sel); return x ? x.getAttribute("src") : def; };
     const lightSrc = srcOf("img.logo-light", "assets/img/logo-light.svg");
     const darkSrc = srcOf("img.logo-dark", "assets/img/logo.svg");
@@ -2408,7 +2430,7 @@
     for (const [p, u] of Object.entries(d.uploads || {})) S.uploads[p] = u;
     for (const p of d.deleted || []) { S.deleted.add(p); delete S.docs[p]; }
     syncPages();
-    if (S.page !== CONSULT && !S.docs[S.page]) S.page = "index.html";
+    if (S.page !== CONSULT && !S.docs[S.page]) S.page = HOME;
     renderTab(); schedulePreview(0); changed();
     toast(t("draftRestored"), "ok");
   }
@@ -2481,7 +2503,7 @@
   function frontDoc() { try { const f = frontFrame(); return f && f.classList.contains("is-front") ? f.contentDocument : null; } catch (e) { return null; } }
   function previewPage() {
     if (S.tab === "files" && isHtml(S.file) && S.docs[S.file]) return S.file;
-    return S.page === CONSULT || !S.docs[S.page] ? "index.html" : S.page;
+    return S.page === CONSULT || !S.docs[S.page] ? HOME : S.page;
   }
   const consultMode = () => S.page === CONSULT && S.tab === "pages";
   function previewVisible() { const st = $(".stage"); return !!st && getComputedStyle(st).display !== "none"; }
@@ -2787,7 +2809,8 @@ grant usage on schema public to anon, authenticated;
 grant insert on public.bv_leads, public.bv_pageviews to anon, authenticated;
 grant select, update, delete on public.bv_leads, public.bv_pageviews to authenticated;
 
-create or replace function public.bv_stats(span int default 30, zone text default 'Africa/Cairo')
+drop function if exists public.bv_stats(int, text);
+create or replace function public.bv_stats(span int default 30, zone text default 'Africa/Cairo', paths text[] default null, forms text[] default null)
 returns json language plpgsql stable security definer set search_path = public as $$
 declare
   n int := greatest(1, least(coalesce(span, 30), 366));
@@ -2803,9 +2826,9 @@ begin
   exception when others then
     zone := 'UTC';
   end;
-  with pv as (select * from public.bv_pageviews where created_at >= since),
-       pp as (select * from public.bv_pageviews where created_at >= prev and created_at < since),
-       ld as (select * from public.bv_leads where created_at >= since),
+  with pv as (select * from public.bv_pageviews where created_at >= since and (paths is null or path = any(paths))),
+       pp as (select * from public.bv_pageviews where created_at >= prev and created_at < since and (paths is null or path = any(paths))),
+       ld as (select * from public.bv_leads where created_at >= since and (forms is null or form = any(forms))),
        ss as (select session, count(*) as c from pv group by session),
        ps as (select session, count(*) as c from pp group by session)
   select json_build_object(
@@ -2820,8 +2843,8 @@ begin
     'prev_pageviews', (select count(*) from pp),
     'prev_sessions', (select count(*) from ps),
     'prev_bounces', (select count(*) from ps where c = 1),
-    'prev_leads', (select count(*) from public.bv_leads where created_at >= prev and created_at < since),
-    'live', (select count(distinct visitor) from public.bv_pageviews where created_at >= now() - interval '5 minutes'),
+    'prev_leads', (select count(*) from public.bv_leads where created_at >= prev and created_at < since and (forms is null or form = any(forms))),
+    'live', (select count(distinct visitor) from public.bv_pageviews where created_at >= now() - interval '5 minutes' and (paths is null or path = any(paths))),
     'daily', coalesce((select json_agg(d order by d.day) from (
         select to_char(g.day, 'YYYY-MM-DD') as day,
                coalesce(v.visitors, 0) as visitors, coalesce(v.views, 0) as views, coalesce(l.leads, 0) as leads
@@ -2839,9 +2862,9 @@ begin
 end;
 $$;
 
-revoke execute on function public.bv_stats(int, text) from public, anon;
+revoke execute on function public.bv_stats(int, text, text[], text[]) from public, anon;
 grant execute on function public.bv_is_admin() to authenticated;
-grant execute on function public.bv_stats(int, text) to authenticated;
+grant execute on function public.bv_stats(int, text, text[], text[]) to authenticated;
 `;
   }
 
@@ -2850,14 +2873,14 @@ grant execute on function public.bv_stats(int, text) to authenticated;
   async function loadStats() {
     if (DATA.demo) { DATA.stats = demoStats(DATA.range); return; }
     DATA.loadingStats = true; DATA.errStats = "";
-    try { DATA.stats = await SB.req("/rest/v1/rpc/bv_stats", { method: "POST", body: JSON.stringify({ span: DATA.range, zone: localTz() }) }); }
+    try { DATA.stats = await SB.req("/rest/v1/rpc/bv_stats", { method: "POST", body: JSON.stringify({ span: DATA.range, zone: localTz(), paths: S.pages.map(p => p.path), forms: B.forms }) }); }
     catch (e) { DATA.errStats = sbErrorText(e); }
     DATA.loadingStats = false;
   }
   async function loadLeads() {
     if (DATA.demo) { if (!DATA.leads) DATA.leads = demoLeads(); return; }
     DATA.loadingLeads = true; DATA.errLeads = "";
-    try { DATA.leads = (await SB.req("/rest/v1/bv_leads?select=*&order=created_at.desc&limit=2000")) || []; }
+    try { DATA.leads = (await SB.req("/rest/v1/bv_leads?select=*&order=created_at.desc&limit=2000&form=in.(" + B.forms.join(",") + ")")) || []; }
     catch (e) { DATA.errLeads = sbErrorText(e); }
     DATA.loadingLeads = false;
     renderRail();
@@ -3257,7 +3280,7 @@ grant execute on function public.bv_stats(int, text) to authenticated;
     det.append(h("div", { class: "lead__body" },
       h("div", { class: "kvs" },
         item(t("lEmail"), l.email, true), item(t("lPhone"), l.phone, true), item(t("lCompany"), l.company), item(t("lService"), l.service),
-        item(t("lBudget"), l.budget), item(t("lSource"), src), item(t("lPage"), pageName(l.page || "") + " · " + t(({ consult: "formConsult", studio: "formStudio", web: "formWeb", live: "formLive", hq: "formHq" })[l.form] || "formContact")),
+        item(t("lBudget"), l.budget), item(t("lSource"), src), item(t("lPage"), pageName(l.page || "") + " · " + t(({ consult: "formConsult", lead: "formLead", studio: "formStudio", web: "formWeb", live: "formLive", hq: "formHq" })[l.form] || "formContact")),
         item(t("lLang"), langName(l.lang)), item(t("lDate"), fmtDate(l.created_at))),
       l.message ? h("div", { class: "lead__msg" }, h("span", { class: "kv__k" }, t("lMessage")), h("p", { dir: "auto" }, l.message)) : null,
       h("div", { class: "lead__edit" },
@@ -3375,11 +3398,12 @@ grant execute on function public.bv_stats(int, text) to authenticated;
      SHELL
      ====================================================================== */
   const TABS = [["overview", "overview", "tabOverview"], ["leads", "users", "tabLeads"], ["pages", "pages", "tabPages"], ["design", "design", "tabDesign"], ["global", "global", "tabGlobal"], ["images", "images", "tabImages"], ["files", "files", "tabFiles"], ["settings", "settings", "tabSettings"]];
+  const brandTabs = () => BRAND === "bv" ? TABS : TABS.filter(x => x[0] !== "design");
   function renderShell() {
     const app = $("#app");
     app.replaceChildren();
     const top = h("header", { class: "top" },
-      h("div", { class: "top__brand" }, h("img", { src: "assets/img/logo-light.svg", alt: "Brand Vitals", class: "top__logo" }), h("span", { class: "top__sep" }), h("span", { class: "top__title" }, t("dashboard"))),
+      h("div", { class: "top__brand" }, h("img", { src: B.logo, alt: B.name, class: "top__logo" }), h("span", { class: "top__sep" }), h("span", { class: "top__title" }, t("dashboard"))),
       h("div", { class: "top__status", id: "topStatus" }),
       h("div", { class: "top__actions" },
         h("button", { type: "button", class: "cb cb--lg", id: "undoBtn", title: t("undo") + " (Ctrl+Z)", "aria-label": t("undo"), onclick: undo }, icon("undo")),
@@ -3413,7 +3437,7 @@ grant execute on function public.bv_stats(int, text) to authenticated;
     const rail = $("#rail");
     if (!rail) return;
     const fresh = (DATA.leads || []).filter(l => l.status === "new").length;
-    rail.replaceChildren(...TABS.map(([id, ic, lab]) => h("button", { type: "button", class: "rail__btn" + (S.tab === id ? " is-active" : ""), "aria-current": S.tab === id ? "page" : null, onclick: () => setTab(id) },
+    rail.replaceChildren(...brandTabs().map(([id, ic, lab]) => h("button", { type: "button", class: "rail__btn" + (S.tab === id ? " is-active" : ""), "aria-current": S.tab === id ? "page" : null, onclick: () => setTab(id) },
       icon(ic), h("span", null, t(lab)), id === "leads" && fresh ? h("b", { class: "rail__badge", "aria-label": fresh + " " + t("st_new") }, fresh > 99 ? "99+" : String(fresh)) : null)));
   }
   function renderPvBar() {
@@ -3476,6 +3500,7 @@ grant execute on function public.bv_stats(int, text) to authenticated;
   const changed = (() => { let tm; return () => { clearTimeout(tm); tm = setTimeout(() => { const l = refreshDirty(); saveDraft(l); }, 300); }; })();
 
   function renderTab(keep) {
+    if (BRAND !== "bv" && S.tab === "design") S.tab = "overview";
     const P = $("#panel");
     if (!P) return;
     const sc = P.parentElement.scrollTop;
@@ -3549,7 +3574,7 @@ grant execute on function public.bv_stats(int, text) to authenticated;
       h("div", { class: "login__grid", "aria-hidden": "true" }),
       h("div", { class: "login__ecg", "aria-hidden": "true", html: '<svg viewBox="0 0 1200 120" preserveAspectRatio="none"><defs><linearGradient id="lgE" x1="0" x2="1"><stop offset="0" stop-color="#00CFFF"/><stop offset="1" stop-color="#00E0C6"/></linearGradient></defs><path pathLength="1000" d="M0 70 H380 L396 62 L412 70 H452 L470 18 L492 112 L510 44 L524 70 H580 L598 58 L618 70 H760 L776 62 L792 70 H832 L850 18 L872 112 L890 44 L904 70 H960 L978 58 L998 70 H1200"/></svg>' }),
       h("div", { class: "login__card" },
-        h("div", { class: "login__top" }, h("img", { class: "login__logo", src: "assets/img/logo-light.svg", alt: "Brand Vitals" }),
+        h("div", { class: "login__top" }, h("img", { class: "login__logo", src: B.logo, alt: B.name }),
           h("button", { type: "button", class: "btn btn--sm btn--ghost", onclick: () => setUiLang(S.ui === "ar" ? "en" : "ar") }, icon("lang"), h("span", null, t("uiLang")))),
         h("span", { class: "login__kicker" }, "DASHBOARD"),
         h("h1", null, t("dashboard")),
@@ -3584,7 +3609,7 @@ grant execute on function public.bv_stats(int, text) to authenticated;
   function applyUiLang() {
     document.documentElement.lang = S.ui;
     document.documentElement.dir = S.ui === "ar" ? "rtl" : "ltr";
-    document.title = t("dashboard") + " | Brand Vitals";
+    document.title = t("dashboard") + " | " + B.name;
   }
   function setUiLang(l) {
     S.ui = l;

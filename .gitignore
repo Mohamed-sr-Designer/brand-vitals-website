@@ -17,3 +17,4 @@ yarn-error.log*
 *.log
 *.tmp
 .impeccable/
+_qa/

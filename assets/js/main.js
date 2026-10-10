@@ -655,7 +655,6 @@
         const btn = item.querySelector(".nav__trigger");
         const menu = item.querySelector(".eco-menu");
         if (!btn || !menu) return;
-        if (subPage) btn.classList.add("is-active");
         const links = () => [...menu.querySelectorAll(".eco-item")];
         const isOpen = () => item.classList.contains("is-open");
         const set = open => { item.classList.toggle("is-open", open); btn.setAttribute("aria-expanded", String(open)); };
@@ -689,7 +688,6 @@
         if (!sub) return;
         const set = open => { tg.setAttribute("aria-expanded", String(open)); sub.hidden = !open; };
         tg.addEventListener("click", () => set(tg.getAttribute("aria-expanded") !== "true"));
-        if (subPage) set(true);
       });
     }
   };
@@ -793,19 +791,69 @@
   };
 
   /* ------------------------------------------------------------------
-     TIMECODE — Vitals Studio viewfinder counter (25 fps); still for reduced motion
+     PORTFOLIO — Vitals Web project showcase. Tabs pick a project; the
+     selected capture scrolls top to bottom, then the next project opens.
+     Pauses on hover/focus; static and manual for reduced motion.
   ------------------------------------------------------------------ */
-  const Timecode = {
+  const Portfolio = {
     init() {
-      if (reduceMotion) return;
-      document.querySelectorAll("[data-timecode]").forEach(el => {
-        let f = 12 * 25 + 4;
-        const pad = n => String(n).padStart(2, "0");
-        setInterval(() => {
-          f++;
-          const fr = f % 25, s = Math.floor(f / 25) % 60, m = Math.floor(f / 1500) % 60, h = Math.floor(f / 90000);
-          el.textContent = pad(h) + ":" + pad(m) + ":" + pad(s) + ":" + pad(fr);
-        }, 40);
+      document.querySelectorAll("[data-pf]").forEach(pf => {
+        const tabs = [...pf.querySelectorAll('[role="tab"]')];
+        const panels = tabs.map(t => document.getElementById(t.getAttribute("aria-controls")));
+        const DUR = 10000;
+        let cur = 0, timer = null, paused = false, inView = false;
+        const scrollShots = (panel, on) => panel.querySelectorAll(".pf__screen").forEach(sc => {
+          const img = sc.querySelector("img");
+          const go = () => {
+            const dist = Math.max(0, img.getBoundingClientRect().height - sc.clientHeight);
+            // reset to the top instantly, force a style flush, then glide to the bottom
+            img.style.transitionDuration = "0ms";
+            img.style.transform = "translateY(0)";
+            void img.offsetHeight;
+            if (on && !reduceMotion && dist) {
+              img.style.transitionDuration = (DUR - 600) + "ms";
+              img.style.transform = "translateY(" + (-dist) + "px)";
+            }
+          };
+          if (img.complete) go(); else img.addEventListener("load", go, { once: true });
+        });
+        const schedule = () => {
+          clearTimeout(timer);
+          if (reduceMotion || paused || !inView) return;
+          timer = setTimeout(() => select((cur + 1) % tabs.length), DUR);
+        };
+        const select = (i, focus) => {
+          tabs.forEach((t, j) => { t.setAttribute("aria-selected", String(j === i)); t.tabIndex = j === i ? 0 : -1; });
+          panels.forEach((p, j) => { if (j !== i) { p.hidden = true; scrollShots(p, false); } });
+          panels[i].hidden = false;
+          cur = i;
+          if (focus) tabs[i].focus();
+          pf.style.setProperty("--pf-dur", DUR + "ms");
+          // restart the progress bar animation
+          const bar = tabs[i].querySelector(".pf__bar i");
+          if (bar) { bar.style.animation = "none"; void bar.offsetWidth; bar.style.animation = ""; }
+          scrollShots(panels[i], inView);
+          schedule();
+        };
+        tabs.forEach((t, i) => {
+          t.addEventListener("click", () => select(i));
+          t.addEventListener("keydown", e => {
+            const k = e.key, rtl = doc.dir === "rtl";
+            let n = null;
+            if (k === "ArrowDown" || k === (rtl ? "ArrowLeft" : "ArrowRight")) n = (i + 1) % tabs.length;
+            else if (k === "ArrowUp" || k === (rtl ? "ArrowRight" : "ArrowLeft")) n = (i - 1 + tabs.length) % tabs.length;
+            else if (k === "Home") n = 0; else if (k === "End") n = tabs.length - 1;
+            if (n != null) { e.preventDefault(); select(n, true); }
+          });
+        });
+        const pause = on => { paused = on; pf.classList.toggle("is-paused", on); if (on) clearTimeout(timer); else schedule(); };
+        pf.addEventListener("mouseenter", () => pause(true));
+        pf.addEventListener("mouseleave", () => pause(false));
+        pf.addEventListener("focusin", () => pause(true));
+        pf.addEventListener("focusout", e => { if (!pf.contains(e.relatedTarget)) pause(false); });
+        if ("IntersectionObserver" in window) {
+          new IntersectionObserver(es => es.forEach(en => { inView = en.isIntersecting; if (inView) select(cur); else clearTimeout(timer); }), { threshold: 0.35 }).observe(pf);
+        } else { inView = true; select(0); }
       });
     }
   };
@@ -968,7 +1016,7 @@
     I18n.init();
     Ecosystem.init();
     WaLinks.init();
-    Timecode.init();
+    Portfolio.init();
     MouseParallax.init();
     Loader.init();
     Nav.init();
