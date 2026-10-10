@@ -13,7 +13,7 @@
      ====================================================================== */
   // Each brand has its own dashboard: dashboard.html?brand=studio etc.
   const BRANDS = {
-    bv: { name: "Brand Vitals", home: "index.html", logo: "assets/img/logo-light.svg", forms: ["contact", "consult", "lead"] },
+    bv: { name: "Brand Vitals", home: "index.html", logo: "assets/img/logo-light.svg", forms: ["contact", "consult", "lead", "careers"] },
     studio: { name: "Vitals Studio", home: "studio.html", logo: "assets/img/brands/studio-light.svg", forms: ["studio"] },
     web: { name: "Vitals Web", home: "web.html", logo: "assets/img/brands/web-light.svg", forms: ["web"] },
     live: { name: "Vitals Live", home: "live.html", logo: "assets/img/brands/live-light.svg", forms: ["live"] },
@@ -542,6 +542,7 @@
     formContact: ["فورم التواصل", "Contact form"],
     formConsult: ["نافذة الاستشارة", "Consultation popup"],
     formLead: ["فورم الهوم", "Home lead form"],
+    formCareers: ["طلب توظيف", "Job application"],
     formStudio: ["فورم Vitals Studio", "Vitals Studio form"],
     formWeb: ["فورم Vitals Web", "Vitals Web form"],
     formLive: ["فورم Vitals Live", "Vitals Live form"],
@@ -3280,7 +3281,7 @@ grant execute on function public.bv_stats(int, text, text[], text[]) to authenti
     det.append(h("div", { class: "lead__body" },
       h("div", { class: "kvs" },
         item(t("lEmail"), l.email, true), item(t("lPhone"), l.phone, true), item(t("lCompany"), l.company), item(t("lService"), l.service),
-        item(t("lBudget"), l.budget), item(t("lSource"), src), item(t("lPage"), pageName(l.page || "") + " · " + t(({ consult: "formConsult", lead: "formLead", studio: "formStudio", web: "formWeb", live: "formLive", hq: "formHq" })[l.form] || "formContact")),
+        item(t("lBudget"), l.budget), item(t("lSource"), src), item(t("lPage"), pageName(l.page || "") + " · " + t(({ consult: "formConsult", lead: "formLead", careers: "formCareers", studio: "formStudio", web: "formWeb", live: "formLive", hq: "formHq" })[l.form] || "formContact")),
         item(t("lLang"), langName(l.lang)), item(t("lDate"), fmtDate(l.created_at))),
       l.message ? h("div", { class: "lead__msg" }, h("span", { class: "kv__k" }, t("lMessage")), h("p", { dir: "auto" }, l.message)) : null,
       h("div", { class: "lead__edit" },

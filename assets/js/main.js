@@ -422,7 +422,14 @@
       const known = ["name", "email", "phone", "company", "interest", "budget", "message", "website"];
       const extra = [];
       form.querySelectorAll("input[name], select[name], textarea[name]").forEach(el => {
+        if ((el.type === "radio" || el.type === "checkbox") && !el.checked) return;
         if (known.includes(el.name) || !String(el.value).trim()) return;
+        if (el.type === "radio") {
+          const q = el.closest("fieldset") && el.closest("fieldset").querySelector("legend");
+          const opt = el.closest("label") && el.closest("label").querySelector("[data-en]");
+          extra.push(((q && q.getAttribute("data-en")) || el.name) + ": " + ((opt && opt.getAttribute("data-en")) || el.value));
+          return;
+        }
         const lab = el.id && form.querySelector('label[for="' + el.id + '"]');
         const label = ((lab && (lab.getAttribute("data-en") || lab.textContent)) || el.name).replace(/\s*\*\s*$/, "").trim();
         extra.push(label + ": " + (el.tagName === "SELECT" ? Forms.label(form, el.name) : String(el.value).trim()));
@@ -773,6 +780,7 @@
         '<article class="pkg' + (p.featured ? " pkg--featured" : "") + '" data-reveal style="--rd:' + (i * 0.08) + 's">' +
           '<div class="pkg__top"><span class="pkg__code" dir="ltr">&lt;' + esc(p.id) + "/&gt;</span>" +
           (p.featured ? '<span class="pkg__flag" data-en="Most chosen" data-ar="الأكثر طلبًا">Most chosen</span>' : "") + "</div>" +
+          '<div class="pkg__wire pkg__wire--' + esc(p.id) + '" aria-hidden="true">' + Portfolio.wire(p.id) + "</div>" +
           bi(p.name, "pkg__name", "h3") + bi(p.kind, "pkg__kind", "span") + bi(p.for, "pkg__for", "p") +
           '<dl class="pkg__facts"><div><dt data-en="Delivery" data-ar="التسليم">Delivery</dt>' + bi(p.weeks, "pkg__v", "dd") + "</div>" +
           '<div><dt data-en="Revisions" data-ar="التعديلات">Revisions</dt>' + bi(p.revisions, "pkg__v", "dd") + "</div></dl>" +
@@ -791,49 +799,108 @@
   };
 
   /* ------------------------------------------------------------------
+     STEPS — multi-step forms ([data-steps]): Next validates the current
+     step, the last step shows a review, then the normal Forms submit runs.
+  ------------------------------------------------------------------ */
+  const Steps = {
+    init() {
+      document.querySelectorAll("form[data-steps]").forEach(form => {
+        const steps = [...form.querySelectorAll(".step")];
+        const box = form.closest(".apply") || form.parentElement;
+        const nav = box.querySelectorAll(".steps-nav li");
+        const bar = box.querySelector(".steps-bar i");
+        const back = form.querySelector("[data-step-back]");
+        const next = form.querySelector("[data-step-next]");
+        const send = form.querySelector("[data-step-submit]");
+        let cur = 0;
+        const valid = step => {
+          let ok = true;
+          step.querySelectorAll("[required]").forEach(input => {
+            let bad;
+            if (input.type === "radio") bad = !step.querySelector('input[name="' + input.name + '"]:checked');
+            else bad = !input.value.trim() || (input.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) || (input.type === "url" && !/^https?:\/\/\S+\.\S+/.test(input.value.trim()));
+            const holder = input.type === "radio" ? step : input.closest(".field");
+            if (holder) holder.classList.toggle("is-error", bad);
+            if (bad) ok = false;
+          });
+          return ok;
+        };
+        const review = () => {
+          const out = form.querySelector("[data-review]");
+          if (!out) return;
+          const rows = [];
+          steps.slice(0, -1).forEach(st => {
+            st.querySelectorAll("input, select, textarea").forEach(el => {
+              if (el.closest(".hp") || !el.name) return;
+              if (el.type === "radio" && !el.checked) return;
+              let label, value;
+              if (el.type === "radio") {
+                label = st.querySelector("legend").textContent;
+                value = el.closest("label").querySelector("b").textContent;
+              } else {
+                const lab = form.querySelector('label[for="' + el.id + '"]');
+                label = lab ? lab.textContent.replace(/\s*\*\s*$/, "") : el.name;
+                value = el.tagName === "SELECT" ? (el.value ? el.options[el.selectedIndex].textContent : "") : el.value.trim();
+              }
+              if (!value) return;
+              rows.push("<div><dt></dt><dd></dd></div>");
+              rows[rows.length - 1] = [label, value];
+            });
+          });
+          out.replaceChildren(...rows.map(([l, v]) => {
+            const d = document.createElement("div");
+            const dt = document.createElement("dt"); dt.textContent = l;
+            const dd = document.createElement("dd"); dd.textContent = v;
+            d.append(dt, dd);
+            return d;
+          }));
+        };
+        const show = i => {
+          cur = i;
+          steps.forEach((st, j) => { st.hidden = j !== i; });
+          nav.forEach((li, j) => { li.classList.toggle("is-on", j === i); li.classList.toggle("is-done", j < i); });
+          if (bar) bar.style.width = ((i + 1) / steps.length * 100) + "%";
+          back.hidden = i === 0;
+          next.hidden = i === steps.length - 1;
+          send.hidden = i !== steps.length - 1;
+          if (i === steps.length - 1) review();
+          const first = steps[i].querySelector("input:not([type=radio]), select, textarea, input[type=radio]");
+          if (first && i > 0) first.focus({ preventScroll: true });
+        };
+        next.addEventListener("click", () => { if (valid(steps[cur])) show(cur + 1); });
+        back.addEventListener("click", () => show(cur - 1));
+        steps.forEach(st => st.addEventListener("change", e => { if (e.target.type === "radio") st.classList.remove("is-error"); }));
+        // Enter moves forward instead of submitting early
+        form.addEventListener("keydown", e => {
+          if (e.key === "Enter" && e.target.tagName !== "TEXTAREA" && cur < steps.length - 1) { e.preventDefault(); next.click(); }
+        });
+        form.addEventListener("reset", () => setTimeout(() => show(0)));
+        show(0);
+      });
+    }
+  };
+
+  /* ------------------------------------------------------------------
      PORTFOLIO — Vitals Web project showcase. Tabs pick a project; the
-     selected capture scrolls top to bottom, then the next project opens.
-     Pauses on hover/focus; static and manual for reduced motion.
+     visitor scrolls each capture inside its desktop and phone frames.
   ------------------------------------------------------------------ */
   const Portfolio = {
+    // tiny page diagrams for the package cards: one page, a multi-page site, a store
+    wire(id) {
+      const page = inner => '<span class="wf"><i class="wf__bar"></i>' + inner + "</span>";
+      if (id === "launch") return page('<i class="wf__hero"></i><i class="wf__l"></i><i class="wf__l wf__l--s"></i><i class="wf__btn"></i>');
+      if (id === "business") return page('<i class="wf__hero"></i><i class="wf__row"><i></i><i></i><i></i></i>') + page('<i class="wf__l"></i><i class="wf__l"></i><i class="wf__l wf__l--s"></i>') + page('<i class="wf__l"></i><i class="wf__row"><i></i><i></i></i>');
+      return page('<i class="wf__grid"><i></i><i></i><i></i><i></i><i></i><i></i></i><i class="wf__cart"></i>');
+    },
     init() {
       document.querySelectorAll("[data-pf]").forEach(pf => {
         const tabs = [...pf.querySelectorAll('[role="tab"]')];
         const panels = tabs.map(t => document.getElementById(t.getAttribute("aria-controls")));
-        const DUR = 10000;
-        let cur = 0, timer = null, paused = false, inView = false;
-        const scrollShots = (panel, on) => panel.querySelectorAll(".pf__screen").forEach(sc => {
-          const img = sc.querySelector("img");
-          const go = () => {
-            const dist = Math.max(0, img.getBoundingClientRect().height - sc.clientHeight);
-            // reset to the top instantly, force a style flush, then glide to the bottom
-            img.style.transitionDuration = "0ms";
-            img.style.transform = "translateY(0)";
-            void img.offsetHeight;
-            if (on && !reduceMotion && dist) {
-              img.style.transitionDuration = (DUR - 600) + "ms";
-              img.style.transform = "translateY(" + (-dist) + "px)";
-            }
-          };
-          if (img.complete) go(); else img.addEventListener("load", go, { once: true });
-        });
-        const schedule = () => {
-          clearTimeout(timer);
-          if (reduceMotion || paused || !inView) return;
-          timer = setTimeout(() => select((cur + 1) % tabs.length), DUR);
-        };
         const select = (i, focus) => {
           tabs.forEach((t, j) => { t.setAttribute("aria-selected", String(j === i)); t.tabIndex = j === i ? 0 : -1; });
-          panels.forEach((p, j) => { if (j !== i) { p.hidden = true; scrollShots(p, false); } });
-          panels[i].hidden = false;
-          cur = i;
+          panels.forEach((p, j) => { p.hidden = j !== i; });
+          panels[i].querySelectorAll(".pf__screen").forEach(sc => { sc.scrollTop = 0; });
           if (focus) tabs[i].focus();
-          pf.style.setProperty("--pf-dur", DUR + "ms");
-          // restart the progress bar animation
-          const bar = tabs[i].querySelector(".pf__bar i");
-          if (bar) { bar.style.animation = "none"; void bar.offsetWidth; bar.style.animation = ""; }
-          scrollShots(panels[i], inView);
-          schedule();
         };
         tabs.forEach((t, i) => {
           t.addEventListener("click", () => select(i));
@@ -846,14 +913,6 @@
             if (n != null) { e.preventDefault(); select(n, true); }
           });
         });
-        const pause = on => { paused = on; pf.classList.toggle("is-paused", on); if (on) clearTimeout(timer); else schedule(); };
-        pf.addEventListener("mouseenter", () => pause(true));
-        pf.addEventListener("mouseleave", () => pause(false));
-        pf.addEventListener("focusin", () => pause(true));
-        pf.addEventListener("focusout", e => { if (!pf.contains(e.relatedTarget)) pause(false); });
-        if ("IntersectionObserver" in window) {
-          new IntersectionObserver(es => es.forEach(en => { inView = en.isIntersecting; if (inView) select(cur); else clearTimeout(timer); }), { threshold: 0.35 }).observe(pf);
-        } else { inView = true; select(0); }
       });
     }
   };
@@ -1016,6 +1075,7 @@
     I18n.init();
     Ecosystem.init();
     WaLinks.init();
+    Steps.init();
     Portfolio.init();
     MouseParallax.init();
     Loader.init();

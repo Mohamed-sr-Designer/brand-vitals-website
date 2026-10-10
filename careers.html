@@ -90,77 +90,109 @@
   <main id="main">
 
     <!-- Page hero -->
-    <section class="page-hero grid-field">
-      <div class="orb orb--b float-slow" style="top:-22%; inset-inline-start:-10%;" data-parallax="0.05"></div>
+    <section class="page-hero page-hero--compact grid-field">
       <div class="container">
         <nav class="breadcrumb" aria-label="Breadcrumb">
           <a href="index.html" data-en="Home" data-ar="الرئيسية">Home</a><span class="sep">/</span><span data-en="Careers" data-ar="الوظائف">Careers</span>
         </nav>
         <p class="eyebrow" data-en="Careers" data-ar="الوظائف">Careers</p>
         <h1 class="page-hero__title" style="margin-top:1rem">
-          <span class="wr"><span style="transition-delay:.1s" data-en="A journey of" data-ar="رحلة من">A journey of</span></span><br>
-          <span class="wr"><span style="transition-delay:.28s" class="accent-text" data-en="growth and impact." data-ar="النموّ والأثر.">growth and impact.</span></span>
+          <span class="wr"><span style="transition-delay:.1s" data-en="Join the team" data-ar="انضم للفريق">Join the team</span></span>
+          <span class="wr"><span style="transition-delay:.28s" class="accent-text" data-en="behind the growth." data-ar="اللي ورا النمو.">behind the growth.</span></span>
         </h1>
-        <p class="lead" data-en="We believe in building teams where unique perspectives and talents can thrive, and everyone has what they need to excel in their role, their career, and at home." data-ar="نؤمن ببناء فرقٍ تزدهر فيها وجهات النظر والمواهب الفريدة، حيث يملك كلُّ فردٍ ما يحتاجه ليتفوّق في دوره ومسيرته وحياته.">We believe in building teams where unique perspectives and talents can thrive, and everyone has what they need to excel in their role, their career, and at home.</p>
+        <p class="lead" data-en="Four short steps. We read every application, and you'll hear back either way." data-ar="أربع خطوات قصيرة. بنقرا كل طلب، وهنرد عليك في كل الأحوال.">Four short steps. We read every application, and you'll hear back either way.</p>
       </div>
     </section>
 
-    <!-- Culture statement -->
-    <section class="section section--tight">
+    <!-- Application -->
+    <section class="section section--flush-top">
       <div class="container">
-        <div class="statement" data-reveal>
-          <p class="eyebrow eyebrow--bare mono" data-en="01 · The promise" data-ar="01 · وعدنا">01 · The promise</p>
-          <h2 data-en="We bring world-class, passionate professionals together to push new boundaries, and grow." data-ar="نجمع محترفين شغوفين من طرازٍ عالمي ليتخطّوا الحدود معاً، وينموا.">We bring world-class, passionate professionals together to push new boundaries, and grow.</h2>
-          <span class="divider"></span>
-        </div>
-      </div>
-    </section>
+        <div class="card apply" data-reveal>
+          <ol class="steps-nav" aria-hidden="true">
+            <li class="is-on"><b>01</b><span data-en="Team" data-ar="الفريق">Team</span></li>
+            <li><b>02</b><span data-en="About you" data-ar="عنك">About you</span></li>
+            <li><b>03</b><span data-en="Your work" data-ar="شغلك">Your work</span></li>
+            <li><b>04</b><span data-en="Review" data-ar="المراجعة">Review</span></li>
+          </ol>
+          <div class="steps-bar" aria-hidden="true"><i></i></div>
+          <form data-validate data-steps data-form="careers" data-success="#careersSuccess" data-wa-en="Hi Brand Vitals, I'd like to apply to join the team." data-wa-ar="مرحبًا Brand Vitals، حابب أقدّم للانضمام للفريق." novalidate>
+            <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
 
-    <!-- Perks -->
-    <section class="section section--tight band-light grid-field">
-      <div class="container">
-        <div class="section-head" data-reveal>
-          <p class="eyebrow" data-en="02 · Why Brand Vitals" data-ar="02 · لماذا Brand Vitals">02 · Why Brand Vitals</p>
-          <h2 data-en="What you'll find here." data-ar="ما الذي ستجده هنا.">What you'll find here.</h2>
-        </div>
-        <div class="grid-3">
-          <div class="perk" data-reveal><span class="mono">01</span><h3 data-en="Real ownership" data-ar="مسؤولية حقيقية">Real ownership</h3><p style="color:var(--text-2)" data-en="You run accounts and answer for numbers, no shadowing, no busywork." data-ar="تدير حسابات وتُحاسَب على أرقام، لا مراقبة من بعيد ولا أعمال شكلية.">You run accounts and answer for numbers, no shadowing, no busywork.</p></div>
-          <div class="perk" data-reveal style="--rd:.06s"><span class="mono">02</span><h3 data-en="One team, regional reach" data-ar="فريقٌ واحد، حضورٌ إقليمي">One team, regional reach</h3><p style="color:var(--text-2)" data-en="Work from Cairo with clients across some of MENA's biggest markets." data-ar="اعمل من القاهرة مع عملاء في بعضٍ من أكبر أسواق المنطقة.">Work from Cairo with clients across some of MENA's biggest markets.</p></div>
-          <div class="perk" data-reveal style="--rd:.12s"><span class="mono">03</span><h3 data-en="Craft + data" data-ar="حرفة + بيانات">Craft + data</h3><p style="color:var(--text-2)" data-en="Creatives who respect numbers, analysts who respect craft, you'll level up in both." data-ar="مبدعون يحترمون الأرقام ومحللون يحترمون الحرفة، سترتقي في الاثنين.">Creatives who respect numbers, analysts who respect craft, you'll level up in both.</p></div>
-          <div class="perk" data-reveal><span class="mono">04</span><h3 data-en="Growth budget" data-ar="ميزانية تطوّر">Growth budget</h3><p style="color:var(--text-2)" data-en="Certifications on the platforms we run, Google, Meta, TikTok and more." data-ar="شهادات معتمدة في المنصات التي نديرها، جوجل وميتا وتيك توك وغيرها.">Certifications on the platforms we run, Google, Meta, TikTok and more.</p></div>
-          <div class="perk" data-reveal style="--rd:.06s"><span class="mono">05</span><h3 data-en="Serious work" data-ar="عملٌ جادّ">Serious work</h3><p style="color:var(--text-2)" data-en="Ambitious brands across a range of industries, so your portfolio compounds fast here." data-ar="علامات طموحة في قطاعات متنوّعة، فيتضاعف ملفّك المهني هنا بسرعة.">Ambitious brands across a range of industries, so your portfolio compounds fast here.</p></div>
-          <div class="perk" data-reveal style="--rd:.12s"><span class="mono">06</span><h3 data-en="Room to excel" data-ar="مساحة للتفوّق">Room to excel</h3><p style="color:var(--text-2)" data-en="Everything you need to excel in your role, your career, and at home." data-ar="كل ما تحتاجه لتتفوّق في دورك ومسيرتك، وفي حياتك أيضاً.">Everything you need to excel in your role, your career, and at home.</p></div>
-        </div>
-      </div>
-    </section>
+            <fieldset class="step" data-step="1">
+              <legend data-en="Which team are you applying to?" data-ar="بتقدّم على أنهي فريق؟">Which team are you applying to?</legend>
+              <div class="team-grid">
+                <label class="team-opt"><input type="radio" name="team" value="performance" required><span class="team-opt__box"><b data-en="Performance and media buying" data-ar="الأداء وشراء الإعلانات">Performance and media buying</b><small data-en="Google, Meta, TikTok and Snap specialists who live in the numbers." data-ar="متخصصو جوجل وميتا وتيك توك وسناب ممن يعيشون داخل الأرقام.">Google, Meta, TikTok and Snap specialists who live in the numbers.</small></span></label>
+                <label class="team-opt"><input type="radio" name="team" value="creative"><span class="team-opt__box"><b data-en="Creative and content" data-ar="الإبداع والمحتوى">Creative and content</b><small data-en="Art directors, designers and Arabic-native copywriters." data-ar="مديرو فن ومصممون وكتّاب محتوى بالعربية الأصيلة.">Art directors, designers and Arabic-native copywriters.</small></span></label>
+                <label class="team-opt"><input type="radio" name="team" value="production"><span class="team-opt__box"><b data-en="Production" data-ar="الإنتاج">Production</b><small data-en="Photographers, videographers, editors and motion designers." data-ar="مصورون فوتوغرافيون وفيديو ومونتيرون ومصممو موشن.">Photographers, videographers, editors and motion designers.</small></span></label>
+                <label class="team-opt"><input type="radio" name="team" value="data"><span class="team-opt__box"><b data-en="Data and analytics" data-ar="البيانات والتحليلات">Data and analytics</b><small data-en="Analysts who turn tracking and dashboards into decisions." data-ar="محللون يحوّلون التتبّع ولوحات البيانات إلى قرارات.">Analysts who turn tracking and dashboards into decisions.</small></span></label>
+                <label class="team-opt"><input type="radio" name="team" value="strategy"><span class="team-opt__box"><b data-en="Strategy and accounts" data-ar="الاستراتيجية والحسابات">Strategy and accounts</b><small data-en="Strategists and account leads who can sit across from a CEO." data-ar="استراتيجيون وقادة حسابات يجلسون بثقة أمام المدير التنفيذي.">Strategists and account leads who can sit across from a CEO.</small></span></label>
+                <label class="team-opt"><input type="radio" name="team" value="other"><span class="team-opt__box"><b data-en="Something else" data-ar="مجال آخر">Something else</b><small data-en="Tell us where you'd fit and why." data-ar="قولنا إنت مناسب لإيه وليه.">Tell us where you'd fit and why.</small></span></label>
+              </div>
+              <span class="err step-err" data-en="Please choose a team." data-ar="من فضلك اختار فريق.">Please choose a team.</span>
+            </fieldset>
 
-    <!-- Open roles -->
-    <section class="section section--tight">
-      <div class="container">
-        <div class="section-head" data-reveal>
-          <p class="eyebrow" data-en="03 · Open to talent" data-ar="03 · نبحث عن مواهب">03 · Open to talent</p>
-          <h2 data-en="Teams we're always growing." data-ar="فرقٌ نوسّعها باستمرار.">Teams we're always growing.</h2>
-        </div>
-        <div>
-          <div class="value-row" data-reveal><span class="num">01</span><div><h3 data-en="Performance &amp; media buying" data-ar="الأداء وشراء الإعلانات">Performance &amp; media buying</h3><p data-en="Google, Meta, TikTok and Snap specialists who live in the numbers." data-ar="متخصصو جوجل وميتا وتيك توك وسناب ممن يعيشون داخل الأرقام.">Google, Meta, TikTok and Snap specialists who live in the numbers.</p></div></div>
-          <div class="value-row" data-reveal><span class="num">02</span><div><h3 data-en="Creative &amp; content" data-ar="الإبداع والمحتوى">Creative &amp; content</h3><p data-en="Art directors, designers and Arabic-native copywriters with a portfolio that converts." data-ar="مديرو فن ومصممون وكتّاب محتوى بالعربية الأصيلة بأعمالٍ تُحوِّل فعلاً.">Art directors, designers and Arabic-native copywriters with a portfolio that converts.</p></div></div>
-          <div class="value-row" data-reveal><span class="num">03</span><div><h3 data-en="Data &amp; analytics" data-ar="البيانات والتحليلات">Data &amp; analytics</h3><p data-en="Analysts who turn tracking, dashboards and attribution into decisions." data-ar="محللون يحوّلون التتبّع ولوحات البيانات والإسناد إلى قرارات.">Analysts who turn tracking, dashboards and attribution into decisions.</p></div></div>
-          <div class="value-row" data-reveal><span class="num">04</span><div><h3 data-en="Strategy &amp; accounts" data-ar="الاستراتيجية والحسابات">Strategy &amp; accounts</h3><p data-en="Strategists and account leads who can sit across the table from a CEO." data-ar="استراتيجيون وقادة حسابات يجلسون بثقة أمام المدير التنفيذي.">Strategists and account leads who can sit across the table from a CEO.</p></div></div>
-        </div>
-      </div>
-    </section>
+            <fieldset class="step" data-step="2" hidden>
+              <legend data-en="Tell us about you" data-ar="عرّفنا بنفسك">Tell us about you</legend>
+              <div class="form-grid">
+              <div class="field">
+                <label for="c-name" data-en="Full name *" data-ar="الاسم بالكامل *">Full name *</label>
+                <input id="c-name" name="name" type="text" required autocomplete="name" data-en-ph="Your name" data-ar-ph="اسمك" placeholder="Your name">
+                <span class="err" data-en="Please enter your name." data-ar="من فضلك اكتب اسمك.">Please enter your name.</span>
+              </div>
+              <div class="field">
+                <label for="c-email" data-en="Email *" data-ar="الإيميل *">Email *</label>
+                <input id="c-email" name="email" type="email" required autocomplete="email" dir="ltr" data-en-ph="you@email.com" data-ar-ph="you@email.com" placeholder="you@email.com">
+                <span class="err" data-en="Please enter a valid email." data-ar="من فضلك اكتب إيميل صحيح.">Please enter a valid email.</span>
+              </div>
+              <div class="field">
+                <label for="c-phone" data-en="Phone / WhatsApp *" data-ar="الموبايل / واتساب *">Phone / WhatsApp *</label>
+                <input id="c-phone" name="phone" type="tel" required autocomplete="tel" dir="ltr" data-en-ph="+20 …" data-ar-ph="+20 …" placeholder="+20 …">
+                <span class="err" data-en="Please enter your number." data-ar="من فضلك اكتب رقمك.">Please enter your number.</span>
+              </div>
+              <div class="field">
+                <label for="c-exp" data-en="Years of experience *" data-ar="سنين الخبرة *">Years of experience *</label>
+                <select id="c-exp" name="experience" required><option value="" data-en="Choose" data-ar="اختار">Choose</option><option value="0-1" data-en="Less than 1 year" data-ar="أقل من سنة">Less than 1 year</option><option value="1-3" data-en="1 to 3 years" data-ar="من سنة لـ 3">1 to 3 years</option><option value="3-5" data-en="3 to 5 years" data-ar="من 3 لـ 5">3 to 5 years</option><option value="5-plus" data-en="5+ years" data-ar="أكتر من 5">5+ years</option></select>
+                <span class="err" data-en="Please choose one." data-ar="من فضلك اختار.">Please choose one.</span>
+              </div>
+              </div>
+            </fieldset>
 
-    <!-- CTA -->
-    <section class="section cta-band">
-      <div class="container">
-        <div class="cta-band__card grid-field" data-reveal>
-          <h2 data-en="Redefine business excellence with us." data-ar="أعد تعريف التميّز في الأعمال معنا.">Redefine business excellence with us.</h2>
-          <p class="lead" data-en="Send your CV and portfolio, tell us which team you belong in and why. We read everything." data-ar="أرسل سيرتك وأعمالك، أخبرنا إلى أي فريق تنتمي ولماذا. نقرأ كل ما يصلنا.">Send your CV and portfolio, tell us which team you belong in and why. We read everything.</p>
-          <div class="btn-row" style="justify-content:center">
-            <a class="btn btn--primary btn--lg" href="mailto:info@brandvitals.io?subject=Application%20, %20Brand Vitals" data-magnetic><span class="btn__label" data-en="Apply now" data-ar="قدّم الآن">Apply now</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-            <a class="btn btn--ghost btn--lg" style="color:#F2F6FA; border-color:rgba(147,178,205,.35)" href="contact.html" data-magnetic><span data-en="Or contact us" data-ar="أو تواصل معنا">Or contact us</span></a>
+            <fieldset class="step" data-step="3" hidden>
+              <legend data-en="Show us your work" data-ar="ورّينا شغلك">Show us your work</legend>
+              <div class="form-grid">
+              <div class="field field--full">
+                <label for="c-portfolio" data-en="Portfolio or LinkedIn link *" data-ar="لينك البورتفوليو أو لينكدإن *">Portfolio or LinkedIn link *</label>
+                <input id="c-portfolio" name="portfolio" type="url" required dir="ltr" data-en-ph="https://" data-ar-ph="https://" placeholder="https://">
+                <span class="err" data-en="Please add a link." data-ar="من فضلك ضيف لينك.">Please add a link.</span>
+              </div>
+              <div class="field field--full">
+                <label for="c-cv" data-en="CV link (Drive, Dropbox…)" data-ar="لينك السي في (درايف، دروب بوكس…)">CV link (Drive, Dropbox…)</label>
+                <input id="c-cv" name="cv" type="url" dir="ltr" data-en-ph="https://" data-ar-ph="https://" placeholder="https://">
+              </div>
+              <div class="field field--full">
+                <label for="c-msg" data-en="Why this team, in a few lines *" data-ar="ليه الفريق ده، في كام سطر *">Why this team, in a few lines *</label>
+                <textarea id="c-msg" name="message" rows="4" required data-en-ph="What you're great at, and what you want to work on." data-ar-ph="إنت شاطر في إيه، وعايز تشتغل على إيه." placeholder="What you're great at, and what you want to work on."></textarea>
+                <span class="err" data-en="Please write a few lines." data-ar="من فضلك اكتب كام سطر.">Please write a few lines.</span>
+              </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="step" data-step="4" hidden>
+              <legend data-en="Review and send" data-ar="راجع وابعت">Review and send</legend>
+              <dl class="review" data-review></dl>
+              <p class="sb-note" data-en="Your details are used only to review this application." data-ar="بياناتك بتُستخدم بس لمراجعة الطلب ده.">Your details are used only to review this application.</p>
+            </fieldset>
+
+            <div class="steps-actions">
+              <button class="btn btn--ghost" type="button" data-step-back hidden><span data-en="Back" data-ar="رجوع">Back</span></button>
+              <button class="btn btn--primary" type="button" data-step-next><span data-en="Next" data-ar="التالي">Next</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+              <button class="btn btn--primary" type="submit" data-step-submit hidden><span class="spinner" aria-hidden="true"></span><span class="btn__label" data-en="Send application" data-ar="ابعت الطلب">Send application</span></button>
+            </div>
+          </form>
+          <div class="form-success" id="careersSuccess" role="status">
+            <h3 data-en="Application received." data-ar="طلبك وصل.">Application received.</h3>
+            <p data-en="Thank you. The team will review it and get back to you." data-ar="شكرًا. الفريق هيراجعه ويرد عليك.">Thank you. The team will review it and get back to you.</p>
           </div>
-          <p class="micro" data-en="Cairo · Hybrid-friendly" data-ar="القاهرة · عمل مرن">Cairo · Hybrid-friendly</p>
         </div>
       </div>
     </section>

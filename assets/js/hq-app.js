@@ -1,6 +1,7 @@
 /* ==========================================================================
-   VITALS HQ · interactive product preview
-   Renders a working mock of the app into every [data-hq-app] element.
+   VITALS HQ · product screens (static)
+   Renders a still screen of the app into every [data-hq-app] element;
+   data-device="phone" shows the mobile app inside a phone frame.
    All data is fictional sample data ("Client A", "Spring Campaign v3").
    Each instance keeps its own state; data-view picks the opening screen.
    ========================================================================== */
@@ -225,7 +226,7 @@
     let view = el.dataset.view || "home";
     const counts = () => ({ inbox: s.sent ? 3 : 4, approvals: s.assets.filter(a => a.status === "review").length, whatsapp: s.sent ? 0 : 1 });
 
-    function render() {
+    let render = function () {
       const c = counts();
       const title = NAV.find(n => n[0] === view);
       el.innerHTML = `
@@ -250,46 +251,35 @@
               <div class="hq-view hq-view--${view}">${V[view](s)}</div>
             </section>
           </div>
-          <div class="hq-toast${s.toast ? " is-on" : ""}" role="status">${s.toast ? ico("check") + esc(s.toast) : ""}</div>
         </div>`;
-    }
-    let toastTimer;
-    const toast = msg => { s.toast = msg; render(); clearTimeout(toastTimer); toastTimer = setTimeout(() => { s.toast = ""; const t = el.querySelector(".hq-toast"); if (t) t.classList.remove("is-on"); }, 2600); };
-    const approve = a => {
-      if (a.status === "approved") return;
-      a.status = "approved";
-      s.ledger.unshift({ en: a.en, ar: a.ar, v: a.v, who: a.client, time: L("Just now", "دلوقتي") });
     };
-
-    el.addEventListener("click", e => {
-      const b = e.target.closest("button");
-      if (!b || !el.contains(b)) return;
-      if (b.dataset.open) s.open = +b.dataset.open;
-      if (b.dataset.go) { view = b.dataset.go; render(); return; }
-      if (b.dataset.open) { render(); return; }
-      const act = b.dataset.act;
-      if (act === "approve") { const a = s.assets.find(x => x.id === s.open); approve(a); toast(L(`Approved by Client ${a.client} · v${a.v} · logged`, `وافق عليه عميل ${a.client} · نسخة ${a.v} · اتسجل`)); }
-      else if (act === "changes") { const a = s.assets.find(x => x.id === s.open); a.status = "changes"; toast(L("Changes requested · counted against scope", "اتطلب تعديل · اتحسب على النطاق")); }
-      else if (act === "bill") {
-        const x = s.scope[+b.dataset.i]; x.billed = true;
-        s.invoices.unshift({ no: "INV-0145", client: "A", cur: "EGP", amt: "3,500", st: "draft", fresh: true, note: ["Extra revision round · Reel cuts", "جولة تعديل إضافية · الريلز"] });
-        toast(L("Draft invoice INV-0145 created", "اتعملت مسودة فاتورة INV-0145"));
-      }
-      else if (act === "send") {
-        s.chat.push({ me: true, en: "Hero banner v3 is ready for review.", ar: "البانر الرئيسي نسخة 3 جاهز للمراجعة.", time: "10:05" });
-        render();
-        setTimeout(() => {
-          s.chat.push({ me: false, en: "Looks great. Approved.", ar: "حلو جدًا. موافق.", time: "10:09" });
-          s.chat.push({ sys: true, en: "Approval synced to Hero banner v3 and logged in the ledger.", ar: "الموافقة اتربطت بالبانر الرئيسي نسخة 3 واتسجلت في السجل.", time: "" });
-          s.sent = true;
-          approve(s.assets[0]);
-          toast(L("Client A approved on WhatsApp", "عميل A وافق على واتساب"));
-        }, 1100);
-      }
-      else if (act === "new") toast(L("This is a preview. Join early access to try it.", "دي معاينة. انضم للوصول المبكر عشان تجربها."));
-    });
+    // Static screens: each one shows a meaningful moment of the product, nothing is clickable.
+    if (view === "whatsapp") {
+      s.chat.push({ me: true, en: "Hero banner v3 is ready for review.", ar: "البانر الرئيسي نسخة 3 جاهز للمراجعة.", time: "10:05" });
+      s.chat.push({ me: false, en: "Looks great. Approved.", ar: "حلو جدًا. موافق.", time: "10:09" });
+      s.chat.push({ sys: true, en: "Approval synced to Hero banner v3 and logged in the ledger.", ar: "الموافقة اتربطت بالبانر الرئيسي نسخة 3 واتسجلت في السجل.", time: "" });
+      s.sent = true;
+    }
+    if (el.dataset.device === "phone") {
+      const tabs = [["home", "Home", "الرئيسية"], ["approvals", "Approvals", "الموافقات"], ["whatsapp", "Chats", "المحادثات"], ["results", "Results", "النتايج"], ["invoices", "Invoices", "الفواتير"]];
+      render = () => {
+        const title = NAV.find(n => n[0] === view);
+        el.innerHTML = `
+        <div class="hq-phone" dir="${ar() ? "rtl" : "ltr"}">
+          <div class="hq-phone__screen">
+            <span class="hq-phone__notch"></span>
+            <div class="hq-phone__status"><span>9:41</span><span>5G</span></div>
+            <div class="hq-phone__head"><span class="hq-ws__logo">YA</span><div><h4>${L(title[1], title[2])}</h4><small>${L("Client A · Spring Campaign", "عميل A · حملة الربيع")}</small></div></div>
+            <div class="hq-phone__body hq-view--${view}">${V[view](s)}</div>
+            <div class="hq-phone__tabs">${tabs.map(([k, en, a]) => `<span class="${k === view ? "is-on" : ""}">${ico(k)}${L(en, a)}</span>`).join("")}</div>
+          </div>
+        </div>`;
+      };
+    }
+    el.setAttribute("aria-hidden", "true");
+    el.setAttribute("inert", "");
     render();
-    new MutationObserver(render).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+    new MutationObserver(() => render()).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
   }
 
   const start = () => document.querySelectorAll("[data-hq-app]").forEach(mount);
